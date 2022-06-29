@@ -1,12 +1,11 @@
-package com.mytestprogram.rickmortyapplication.presentation
+package com.mytestprogram.rickmortyapplication.presentation.list_characters_screen
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mytestprogram.rickmortyapplication.domain.CharactersRepository
-import com.mytestprogram.rickmortyapplication.domain.LoadAllCharactersUseCase
-import com.mytestprogram.rickmortyapplication.domain.models.AllCharacters
+import com.mytestprogram.rickmortyapplication.domain.usecases.LoadAllCharactersUseCase
+import com.mytestprogram.rickmortyapplication.domain.models.characters.AllCharacters
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import javax.inject.Inject
@@ -21,19 +20,25 @@ class ListCharactersViewModel @Inject constructor(
     private val _isDataLoading = MutableLiveData<Boolean>()
     val isDataLoading: LiveData<Boolean> = _isDataLoading
 
+    private val _isError = MutableLiveData<Boolean>()
+    val isError: LiveData<Boolean> = _isError
+
     init {
         load()
     }
 
     private fun load() {
         _isDataLoading.value = true
+        _isError.value = false
         viewModelScope.launch {
             try {
                 val loadedAllCharacters = loadAllCharactersUseCase.loadAllCharacters()
                 _allCharacters.postValue(loadedAllCharacters)
-                _isDataLoading.postValue(false)
+                _isDataLoading.value = false
+                _isError.value = false
             } catch (e:Exception) {
-                _isDataLoading.postValue(false)
+                _isDataLoading.value = false
+                _isError.value = true
             }
         }
     }

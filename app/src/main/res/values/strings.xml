@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">RickMortyApplication</string>
+    <string name="error_message">Some error while loading. Pull to refresh data</string>
 </resources>

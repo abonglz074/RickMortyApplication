@@ -1,4 +1,4 @@
-package com.mytestprogram.rickmortyapplication.presentation
+package com.mytestprogram.rickmortyapplication.presentation.list_characters_screen
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.mytestprogram.rickmortyapplication.databinding.CharactersListRecyclerviewItemBinding
-import com.mytestprogram.rickmortyapplication.domain.models.SingleCharacter
+import com.mytestprogram.rickmortyapplication.domain.models.characters.SingleCharacter
 
 class ListCharactersAdapter(
     private val actionListener: ListCharactersActionListener

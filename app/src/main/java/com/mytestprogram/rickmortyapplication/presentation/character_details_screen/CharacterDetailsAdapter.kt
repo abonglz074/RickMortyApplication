@@ -1,0 +1,4 @@
+package com.mytestprogram.rickmortyapplication.presentation.character_details_screen
+
+class CharacterDetailsAdapter {
+}

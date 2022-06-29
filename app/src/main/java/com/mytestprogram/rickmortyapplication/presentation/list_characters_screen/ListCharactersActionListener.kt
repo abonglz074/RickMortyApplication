@@ -1,4 +1,4 @@
-package com.mytestprogram.rickmortyapplication.presentation
+package com.mytestprogram.rickmortyapplication.presentation.list_characters_screen
 
 interface ListCharactersActionListener {
 
