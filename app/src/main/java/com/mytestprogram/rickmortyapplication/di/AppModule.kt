@@ -6,13 +6,14 @@ import com.google.gson.GsonBuilder
 import com.mytestprogram.rickmortyapplication.data.CharactersRepositoryImpl
 import com.mytestprogram.rickmortyapplication.data.remote.CharacterRetrofitService
 import com.mytestprogram.rickmortyapplication.domain.repository.CharactersRepository
-import com.mytestprogram.rickmortyapplication.domain.usecases.LoadAllCharactersUseCase
-import com.mytestprogram.rickmortyapplication.domain.usecases.LoadAllEpisodesUseCase
-import com.mytestprogram.rickmortyapplication.domain.usecases.LoadSingleCharacterByIdUseCase
+import com.mytestprogram.rickmortyapplication.domain.usecases.*
 import com.mytestprogram.rickmortyapplication.presentation.character_details_screen.CharacterDetailsViewModel
 import com.mytestprogram.rickmortyapplication.presentation.character_details_screen.CharacterDetailsViewModelFactory
+import com.mytestprogram.rickmortyapplication.presentation.episode_details.EpisodeDetailsViewModelFactory
 import com.mytestprogram.rickmortyapplication.presentation.list_characters_screen.CharactersViewModelFactory
 import com.mytestprogram.rickmortyapplication.presentation.list_episodes.ListEpisodesViewModelFactory
+import com.mytestprogram.rickmortyapplication.presentation.list_locations.ListLocationsViewModelFactory
+import com.mytestprogram.rickmortyapplication.presentation.location_details.LocationDetailsViewModelFactory
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -29,6 +30,52 @@ class AppModule(val context: Context) {
     }
 
     @Provides
+    fun provideLoadMultipleCharactersUseCase(charactersRepositoryImpl: CharactersRepositoryImpl): LoadMultipleCharactersUseCase {
+        return LoadMultipleCharactersUseCase(charactersRepositoryImpl)
+    }
+
+    @Provides
+    fun provideLoadMultipleEpisodesUseCase(charactersRepositoryImpl: CharactersRepositoryImpl): LoadMultipleEpisodesUseCase {
+        return LoadMultipleEpisodesUseCase(charactersRepositoryImpl)
+    }
+
+    @Provides
+    fun provideLocationDetailsViewModelFactory(
+        loadSingleLocationByIdUseCase: LoadSingleLocationByIdUseCase,
+        loadMultipleCharactersUseCase: LoadMultipleCharactersUseCase
+    ): LocationDetailsViewModelFactory {
+        return LocationDetailsViewModelFactory(
+            loadSingleLocationByIdUseCase,
+            loadMultipleCharactersUseCase
+        )
+    }
+
+    @Provides
+    fun provideLoadLocationByIdUseCase(charactersRepositoryImpl: CharactersRepositoryImpl): LoadSingleLocationByIdUseCase {
+        return LoadSingleLocationByIdUseCase(charactersRepositoryImpl)
+    }
+
+    @Provides
+    fun provideListLocationsViewModelFactory(loadAllLocationsUseCase: LoadAllLocationsUseCase): ListLocationsViewModelFactory {
+        return ListLocationsViewModelFactory(loadAllLocationsUseCase)
+    }
+
+    @Provides
+    fun provideLoadAllLocationsUseCase(charactersRepositoryImpl: CharactersRepositoryImpl): LoadAllLocationsUseCase {
+        return LoadAllLocationsUseCase(charactersRepositoryImpl)
+    }
+
+    @Provides
+    fun provideEpisodeDetailsViewModelFactory(loadSingleEpisodeByIdUseCase: LoadSingleEpisodeByIdUseCase): EpisodeDetailsViewModelFactory {
+        return EpisodeDetailsViewModelFactory(loadSingleEpisodeByIdUseCase)
+    }
+
+    @Provides
+    fun provideLoadEpisodeByIdUseCase(charactersRepositoryImpl: CharactersRepositoryImpl): LoadSingleEpisodeByIdUseCase {
+        return LoadSingleEpisodeByIdUseCase(charactersRepositoryImpl)
+    }
+
+    @Provides
     fun provideListEpisodesViewModelFactory(loadAllEpisodesUseCase: LoadAllEpisodesUseCase): ListEpisodesViewModelFactory {
         return ListEpisodesViewModelFactory(loadAllEpisodesUseCase)
     }
@@ -39,14 +86,21 @@ class AppModule(val context: Context) {
     }
 
     @Provides
-    fun provideCharacterDetailsViewModelFactory(loadSingleCharacterByIdUseCase: LoadSingleCharacterByIdUseCase): CharacterDetailsViewModelFactory {
-        return CharacterDetailsViewModelFactory(loadSingleCharacterByIdUseCase)
+    fun provideCharacterDetailsViewModelFactory(
+        loadSingleCharacterByIdUseCase: LoadSingleCharacterByIdUseCase,
+        loadMultipleEpisodesUseCase: LoadMultipleEpisodesUseCase
+    ): CharacterDetailsViewModelFactory {
+        return CharacterDetailsViewModelFactory(
+            loadSingleCharacterByIdUseCase,
+            loadMultipleEpisodesUseCase
+        )
     }
 
     @Provides
     fun provideSingleCharacterByIdUseCase(charactersRepositoryImpl: CharactersRepositoryImpl): LoadSingleCharacterByIdUseCase {
         return LoadSingleCharacterByIdUseCase(charactersRepositoryImpl)
     }
+
     @Provides
     fun provideCharactersViewModelFactory(loadAllCharactersUseCase: LoadAllCharactersUseCase): CharactersViewModelFactory {
         return CharactersViewModelFactory(loadAllCharactersUseCase)
@@ -61,6 +115,7 @@ class AppModule(val context: Context) {
     fun provideCharactersRepository(characterRetrofitService: CharacterRetrofitService): CharactersRepositoryImpl {
         return CharactersRepositoryImpl(characterRetrofitService)
     }
+
     @Provides
     fun provideRetrofitService(retrofit: Retrofit): CharacterRetrofitService {
         return retrofit.create(CharacterRetrofitService::class.java)
@@ -75,6 +130,7 @@ class AppModule(val context: Context) {
             .build()
         return retrofit
     }
+
     @Singleton
     @Provides
     fun provideGson(): Gson = GsonBuilder().create()

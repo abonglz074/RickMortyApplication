@@ -9,11 +9,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.mytestprogram.rickmortyapplication.App
 import com.mytestprogram.rickmortyapplication.MainActivity
 import com.mytestprogram.rickmortyapplication.databinding.FragmentCharacterDetailsBinding
 import com.mytestprogram.rickmortyapplication.presentation.list_characters_screen.ListCharactersViewModel
+import com.mytestprogram.rickmortyapplication.presentation.list_episodes.ListEpisodesActionListener
 import com.mytestprogram.rickmortyapplication.utils.navigator
 import javax.inject.Inject
 
@@ -23,12 +25,12 @@ class CharacterDetailsFragment : Fragment() {
     lateinit var vmFactory: CharacterDetailsViewModelFactory
     private lateinit var binding: FragmentCharacterDetailsBinding
     private lateinit var viewModel: CharacterDetailsViewModel
-//    private lateinit var adapter: CharacterDetailsAdapter
+    private lateinit var adapter: CharacterDetailsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,23 +42,20 @@ class CharacterDetailsFragment : Fragment() {
 
         viewModel.loadCharacterById(requireArguments().getInt(ARG_CHARACTER_ID))
 
+
         binding = FragmentCharacterDetailsBinding.inflate(layoutInflater, container, false)
         (requireActivity() as MainActivity).bottomNavigationGone()
 
+        adapter = CharacterDetailsAdapter(object : ListEpisodesActionListener {
+            override fun showEpisodeDetailsScreen(episodeId: Int) {
+                navigator().showEpisodeDetails(episodeId)
+            }
+        })
 
 
+        binding.characterDetailsRecyclerviewEpisodes.layoutManager = LinearLayoutManager(context)
+        binding.characterDetailsRecyclerviewEpisodes.adapter = adapter
 
-//
-//        adapter = CharacterDetailsAdapter(object : ListEpisodesActionListener {
-//            override fun showEpisodeDetailsScreen(episodeId: Int) {
-////                navigator().showEpisodeDetails(episodeId)
-//            }
-//        })
-
-
-//        binding.characterDetailsRecyclerviewEpisodes.layoutManager = LinearLayoutManager(context)
-//        binding.characterDetailsRecyclerviewEpisodes.adapter = adapter
-////
         viewModel.singleCharacter.observe(viewLifecycleOwner) {
             binding.characterDetailsName.text = viewModel.singleCharacter.value!!.name
             binding.characterDetailsGender.text = viewModel.singleCharacter.value!!.gender
@@ -68,6 +67,7 @@ class CharacterDetailsFragment : Fragment() {
                 .load(viewModel.singleCharacter.value!!.image)
                 .into(binding.characterDetailsImageview)
 
+
             val locationUrl = viewModel.singleCharacter.value!!.location.url
             val locationId = locationUrl.substring(41).toInt()
             binding.characterDetailsLocation.setOnClickListener {
@@ -77,18 +77,35 @@ class CharacterDetailsFragment : Fragment() {
                 navigator().showLocationDetails(locationId)
             }
 
+            val episodesUrlsList: List<String> = viewModel.singleCharacter.value!!.episode
+            val episodeIds = mutableListOf<Int>()
+            episodesUrlsList.forEach { i ->
+                episodeIds.add(i.substring(40).toInt())
+            }
+            viewModel.loadMultipleEpisodes(episodeIds)
+            viewModel.episodesList.observe(viewLifecycleOwner) {
+                adapter.episodes = viewModel.episodesList.value!!
+            }
 
-//            val episodesUrlsList: List<String> = viewModel.characterDetails.value!!.episode
-//            val episodeIds = mutableListOf<Int>()
-//            episodesUrlsList.forEach { i ->
-//                episodeIds.add(i.substring(40).toInt())
+
+
+
+
+
+//            viewModel.isError.observe(viewLifecycleOwner) {
+//                if (viewModel.isError.value == true) {
+//                    binding.characterDetailsErrorMessage.visibility = View.VISIBLE
+//                } else {
+//                    binding.characterDetailsErrorMessage.visibility = View.GONE
+//                }
 //            }
-//            viewModel.loadMultipleEpisodes(episodeIds)
-//
-//            viewModel.episodeDetails.observe(viewLifecycleOwner, Observer {
-//                adapter.episodes = viewModel.episodeDetails.value!!
-//            })
-
+//            viewModel.isDataLoading.observe(viewLifecycleOwner) {
+//                if (viewModel.isDataLoading.value == true) {
+//                    binding.characterDetailsProgressBar.visibility = View.VISIBLE
+//                } else {
+//                    binding.characterDetailsProgressBar.visibility = View.GONE
+//                }
+//            }
 
         }
 

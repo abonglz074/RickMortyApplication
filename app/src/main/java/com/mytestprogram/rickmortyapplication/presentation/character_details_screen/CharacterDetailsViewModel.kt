@@ -5,16 +5,23 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mytestprogram.rickmortyapplication.domain.models.characters.SingleCharacter
+import com.mytestprogram.rickmortyapplication.domain.models.episodes.SingleEpisode
+import com.mytestprogram.rickmortyapplication.domain.usecases.LoadMultipleCharactersUseCase
+import com.mytestprogram.rickmortyapplication.domain.usecases.LoadMultipleEpisodesUseCase
 import com.mytestprogram.rickmortyapplication.domain.usecases.LoadSingleCharacterByIdUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class CharacterDetailsViewModel @Inject constructor(
-     val loadSingleCharacterByIdUseCase: LoadSingleCharacterByIdUseCase
+     val loadSingleCharacterByIdUseCase: LoadSingleCharacterByIdUseCase,
+     val loadMultipleEpisodesUseCase: LoadMultipleEpisodesUseCase
 ): ViewModel() {
 
     private val _singleCharacter = MutableLiveData<SingleCharacter>()
     val singleCharacter: LiveData<SingleCharacter> = _singleCharacter
+
+    private val _episodesList = MutableLiveData<List<SingleEpisode>>()
+    val episodesList: LiveData<List<SingleEpisode>> = _episodesList
 
     private val _isDataLoading = MutableLiveData<Boolean>()
     val isDataLoading: LiveData<Boolean> = _isDataLoading
@@ -36,6 +43,16 @@ class CharacterDetailsViewModel @Inject constructor(
                 _isDataLoading.value = false
                 _isError.value = true
 
+            }
+        }
+    }
+    fun loadMultipleEpisodes(episodeIds: List<Int>) {
+        viewModelScope.launch {
+            try {
+                val loadedMultipleEpisodes = loadMultipleEpisodesUseCase.loadMultipleEpisodes(episodeIds)
+                _episodesList.postValue(loadedMultipleEpisodes)
+            } catch (e: Exception) {
+                _isError.value = true
             }
         }
     }

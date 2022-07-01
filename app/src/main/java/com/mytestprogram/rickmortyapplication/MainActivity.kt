@@ -8,6 +8,7 @@ import com.mytestprogram.rickmortyapplication.presentation.character_details_scr
 import com.mytestprogram.rickmortyapplication.presentation.episode_details.EpisodeDetailsFragment
 import com.mytestprogram.rickmortyapplication.presentation.list_characters_screen.ListCharactersFragment
 import com.mytestprogram.rickmortyapplication.presentation.list_episodes.ListEpisodesFragment
+import com.mytestprogram.rickmortyapplication.presentation.list_locations.ListLocationsFragment
 import com.mytestprogram.rickmortyapplication.presentation.location_details.LocationDetailsFragment
 import com.mytestprogram.rickmortyapplication.utils.Navigation
 
@@ -50,7 +51,9 @@ class MainActivity : AppCompatActivity(), Navigation {
     }
 
     override fun showLocationsList() {
-        TODO("Not yet implemented")
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, ListLocationsFragment())
+            .commit()
     }
 
     override fun showEpisodesList() {
