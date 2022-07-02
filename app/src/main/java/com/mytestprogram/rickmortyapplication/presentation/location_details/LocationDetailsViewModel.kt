@@ -5,10 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mytestprogram.rickmortyapplication.domain.models.characters.SingleCharacter
-import com.mytestprogram.rickmortyapplication.domain.models.episodes.SingleEpisode
 import com.mytestprogram.rickmortyapplication.domain.models.locations.SingleLocation
 import com.mytestprogram.rickmortyapplication.domain.usecases.LoadMultipleCharactersUseCase
-import com.mytestprogram.rickmortyapplication.domain.usecases.LoadSingleEpisodeByIdUseCase
 import com.mytestprogram.rickmortyapplication.domain.usecases.LoadSingleLocationByIdUseCase
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -52,7 +50,7 @@ class LocationDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val loadedMultipleCharacters = loadMultipleCharactersUseCase.loadMultipleCharacters(characterIds)
-                _charactersList.postValue(loadedMultipleCharacters)
+//                _charactersList.postValue(loadedMultipleCharacters)
             } catch (e:Exception) {
 
             }

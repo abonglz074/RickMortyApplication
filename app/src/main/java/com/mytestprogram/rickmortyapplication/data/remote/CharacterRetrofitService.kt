@@ -1,7 +1,8 @@
 package com.mytestprogram.rickmortyapplication.data.remote
 
-import com.mytestprogram.rickmortyapplication.domain.models.characters.AllCharacters
-import com.mytestprogram.rickmortyapplication.domain.models.characters.SingleCharacter
+
+import com.mytestprogram.rickmortyapplication.data.models.characters.AllCharactersEntity
+import com.mytestprogram.rickmortyapplication.data.models.characters.SingleCharacterEntity
 import com.mytestprogram.rickmortyapplication.domain.models.episodes.AllEpisodes
 import com.mytestprogram.rickmortyapplication.domain.models.episodes.SingleEpisode
 import com.mytestprogram.rickmortyapplication.domain.models.locations.AllLocations
@@ -13,13 +14,13 @@ interface CharacterRetrofitService {
 
 
     @GET("character")
-    suspend fun loadAllCharacters(): AllCharacters
+    suspend fun loadAllCharacters(): AllCharactersEntity
 
     @GET("character/{character-id}")
-    suspend fun loadCharacterById(@Path("character-id") characterId: Int): SingleCharacter
+    suspend fun loadCharacterById(@Path("character-id") characterId: Int): SingleCharacterEntity
 
     @GET("character/{character-id}")
-    suspend fun loadMultipleCharactersById(@Path("character-id") characterIds: List<Int>): List<SingleCharacter>
+    suspend fun loadMultipleCharactersById(@Path("character-id") characterIds: List<Int>): List<SingleCharacterEntity>
 
     @GET("episode")
     suspend fun loadAllEpisodes(): AllEpisodes

@@ -5,6 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.mytestprogram.rickmortyapplication.data.models.characters.SingleCharacterEntity
 import com.mytestprogram.rickmortyapplication.databinding.CharactersListRecyclerviewItemBinding
 import com.mytestprogram.rickmortyapplication.domain.models.characters.SingleCharacter
 import com.mytestprogram.rickmortyapplication.presentation.list_characters_screen.ListCharactersActionListener
@@ -16,7 +17,7 @@ class LocationDetailsAdapter(
     View.OnClickListener {
 
 
-    var characters: List<SingleCharacter> = emptyList()
+    var characters: List<SingleCharacterEntity> = emptyList()
         set(newValue) {
             field = newValue
             notifyDataSetChanged()

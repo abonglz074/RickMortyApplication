@@ -1,9 +1,12 @@
 package com.mytestprogram.rickmortyapplication.di
 
+import android.app.Application
 import android.content.Context
+import androidx.room.Room
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.mytestprogram.rickmortyapplication.data.CharactersRepositoryImpl
+import com.mytestprogram.rickmortyapplication.data.local.RickMortyDatabase
 import com.mytestprogram.rickmortyapplication.data.remote.CharacterRetrofitService
 import com.mytestprogram.rickmortyapplication.domain.repository.CharactersRepository
 import com.mytestprogram.rickmortyapplication.domain.usecases.*
@@ -28,6 +31,7 @@ class AppModule(val context: Context) {
     fun provideContext(): Context {
         return context
     }
+
 
     @Provides
     fun provideLoadMultipleCharactersUseCase(charactersRepositoryImpl: CharactersRepositoryImpl): LoadMultipleCharactersUseCase {
@@ -66,8 +70,14 @@ class AppModule(val context: Context) {
     }
 
     @Provides
-    fun provideEpisodeDetailsViewModelFactory(loadSingleEpisodeByIdUseCase: LoadSingleEpisodeByIdUseCase): EpisodeDetailsViewModelFactory {
-        return EpisodeDetailsViewModelFactory(loadSingleEpisodeByIdUseCase)
+    fun provideEpisodeDetailsViewModelFactory(
+        loadSingleEpisodeByIdUseCase: LoadSingleEpisodeByIdUseCase,
+        loadMultipleCharactersUseCase: LoadMultipleCharactersUseCase
+    ): EpisodeDetailsViewModelFactory {
+        return EpisodeDetailsViewModelFactory(
+            loadSingleEpisodeByIdUseCase,
+            loadMultipleCharactersUseCase
+        )
     }
 
     @Provides
@@ -112,8 +122,11 @@ class AppModule(val context: Context) {
     }
 
     @Provides
-    fun provideCharactersRepository(characterRetrofitService: CharacterRetrofitService): CharactersRepositoryImpl {
-        return CharactersRepositoryImpl(characterRetrofitService)
+    fun provideCharactersRepository(
+        characterRetrofitService: CharacterRetrofitService,
+        db: RickMortyDatabase
+    ): CharactersRepositoryImpl {
+        return CharactersRepositoryImpl(characterRetrofitService, db)
     }
 
     @Provides
@@ -134,4 +147,10 @@ class AppModule(val context: Context) {
     @Singleton
     @Provides
     fun provideGson(): Gson = GsonBuilder().create()
+
+    @Singleton
+    @Provides
+    fun provideDatabase(context: Context): RickMortyDatabase =
+        Room.databaseBuilder(context, RickMortyDatabase::class.java, "database")
+            .build()
 }

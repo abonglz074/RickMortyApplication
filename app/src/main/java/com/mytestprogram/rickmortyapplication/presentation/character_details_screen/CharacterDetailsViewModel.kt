@@ -36,7 +36,7 @@ class CharacterDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 val loadedSingleCharacter = loadSingleCharacterByIdUseCase.loadCharacterById(characterId)
-                _singleCharacter.postValue(loadedSingleCharacter)
+//                _singleCharacter.postValue(loadedSingleCharacter)
                 _isDataLoading.value = false
                 _isError.value = false
             } catch (e: Exception) {

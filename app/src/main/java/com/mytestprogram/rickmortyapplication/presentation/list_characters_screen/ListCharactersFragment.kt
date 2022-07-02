@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.mytestprogram.rickmortyapplication.App
 import com.mytestprogram.rickmortyapplication.MainActivity
 import com.mytestprogram.rickmortyapplication.databinding.FragmentListCharactersBinding
+import com.mytestprogram.rickmortyapplication.utils.Resource
 import com.mytestprogram.rickmortyapplication.utils.navigator
 import javax.inject.Inject
 
@@ -44,25 +46,28 @@ class ListCharactersFragment : Fragment() {
 
         binding.charactersListRecyclerview.layoutManager = GridLayoutManager(context, 2)
         binding.charactersListRecyclerview.adapter = adapter
+//
+//        viewModel.isError.observe(viewLifecycleOwner) {
+//            if (viewModel.isError.value == true) {
+//                binding.listCharactersErrorMessage.visibility = View.VISIBLE
+//            } else {
+//                binding.listCharactersErrorMessage.visibility = View.GONE
+//            }
+//        }
+//        viewModel.isDataLoading.observe(viewLifecycleOwner) {
+//            if (viewModel.isDataLoading.value == true) {
+//                binding.listCharactersProgressBar.visibility = View.VISIBLE
+//            } else {
+//                binding.listCharactersProgressBar.visibility = View.GONE
+//            }
+//        }
 
-        viewModel.isError.observe(viewLifecycleOwner) {
-            if (viewModel.isError.value == true) {
-                binding.listCharactersErrorMessage.visibility = View.VISIBLE
-            } else {
-                binding.listCharactersErrorMessage.visibility = View.GONE
-            }
-        }
-        viewModel.isDataLoading.observe(viewLifecycleOwner) {
-            if (viewModel.isDataLoading.value == true) {
-                binding.listCharactersProgressBar.visibility = View.VISIBLE
-            } else {
-                binding.listCharactersProgressBar.visibility = View.GONE
-            }
-        }
+        viewModel.allCharacters.observe(viewLifecycleOwner, Observer { result ->
+            adapter.characters = result.data!!
 
-        viewModel.allCharacters.observe(viewLifecycleOwner, Observer {
-            adapter.characters = viewModel.allCharacters.value!!.results
-
+            binding.listCharactersProgressBar.isVisible = result is Resource.Loading && result.data.isNullOrEmpty()
+            binding.listCharactersErrorMessage.isVisible = result is Resource.Error && result.data.isNullOrEmpty()
+            binding.listCharactersErrorMessage.text = result.error?.localizedMessage
         })
 
         return binding.root

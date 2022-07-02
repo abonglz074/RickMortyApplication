@@ -1,13 +1,16 @@
-package com.mytestprogram.rickmortyapplication.domain.models.characters
+package com.mytestprogram.rickmortyapplication.data.models.characters
 
+import androidx.room.ColumnInfo
+import androidx.room.Embedded
+import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.mytestprogram.rickmortyapplication.data.models.characters.Location
-import com.mytestprogram.rickmortyapplication.data.models.characters.Origin
 
-data class SingleCharacter(
+@Entity(tableName = "characters")
+data class SingleCharacterEntity(
     val created: String,
     val episode: List<String>,
     val gender: String,
+    @PrimaryKey
     val id: Int,
     val image: String,
     val location: Location,

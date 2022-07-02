@@ -1,6 +1,5 @@
 package com.mytestprogram.rickmortyapplication.domain.usecases
 
-import com.mytestprogram.rickmortyapplication.domain.models.characters.SingleCharacter
 import com.mytestprogram.rickmortyapplication.domain.models.episodes.SingleEpisode
 import com.mytestprogram.rickmortyapplication.domain.repository.CharactersRepository
 import javax.inject.Inject

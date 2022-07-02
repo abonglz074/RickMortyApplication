@@ -21,7 +21,7 @@ class EpisodeDetailsFragment: Fragment() {
     @Inject
     lateinit var vmFactory: EpisodeDetailsViewModelFactory
     private lateinit var binding: FragmentEpisodeDetailsBinding
-//    private lateinit var adapter: EpisodeDetailsAdapter
+    private lateinit var adapter: EpisodeDetailsAdapter
     private lateinit var viewModel: EpisodeDetailsViewModel
 
     override fun onCreateView(
@@ -37,30 +37,32 @@ class EpisodeDetailsFragment: Fragment() {
 
         viewModel.loadEpisodeById(requireArguments().getInt(ARG_EPISODE_ID))
 
-//        binding.episodeDetailsCharactersRecyclerview.layoutManager = GridLayoutManager(context, 2)
-//        binding.episodeDetailsCharactersRecyclerview.adapter = adapter
 
-//        adapter = EpisodeDetailsAdapter(object: ListCharactersActionListener {
-//            override fun onCharacterDetailsScreen(characterId: Int) {
-//                navigator().showCharacterDetails(characterId)
-//            }
-//        })
+
+        adapter = EpisodeDetailsAdapter(object: ListCharactersActionListener {
+            override fun onCharacterDetailsScreen(characterId: Int) {
+                navigator().showCharacterDetails(characterId)
+            }
+        })
+
+        binding.episodeDetailsRecyclerView.layoutManager = GridLayoutManager(context, 2)
+        binding.episodeDetailsRecyclerView.adapter = adapter
 
         viewModel.singleEpisode.observe(viewLifecycleOwner){
             binding.episodeName.text = viewModel.singleEpisode.value!!.name
             binding.episodeNumber.text = viewModel.singleEpisode.value!!.episode
             binding.episodeAirdate.text = viewModel.singleEpisode.value!!.air_date
 
-//            val characterUrlsList: List<String> = viewModel.episodeDetails.value!!.characters
-//            val characterIds = mutableListOf<Int>()
-//            characterUrlsList.forEach { i ->
-//                characterIds.add(i.substring(42).toInt())
+            val characterUrlsList: List<String> = viewModel.singleEpisode.value!!.characters
+            val characterIds = mutableListOf<Int>()
+            characterUrlsList.forEach { i ->
+                characterIds.add(i.substring(42).toInt())
+            }
+            viewModel.loadMultipleCharacters(characterIds)
+//
+//            viewModel.charactersList.observe(viewLifecycleOwner) {
+//                adapter.characters = viewModel.charactersList.value!!
 //            }
-//            viewModel.loadMultipleCharactersDetails(characterIds)
-
-//            viewModel.characterDetails.observe(viewLifecycleOwner, Observer {
-//                adapter.characters = viewModel.characterDetails.value!!
-//            })
         }
 
 

@@ -65,9 +65,9 @@ class LocationDetailsFragment : Fragment() {
             }
             viewModel.loadMultipleCharacters(characterIds)
 
-            viewModel.charactersList.observe(viewLifecycleOwner) {
-                adapter.characters = viewModel.charactersList.value!!
-            }
+//            viewModel.charactersList.observe(viewLifecycleOwner) {
+//                adapter.characters = viewModel.charactersList.value!!
+//            }
         }
 
 

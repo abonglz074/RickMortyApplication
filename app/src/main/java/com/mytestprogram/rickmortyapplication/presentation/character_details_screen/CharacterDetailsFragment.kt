@@ -68,14 +68,14 @@ class CharacterDetailsFragment : Fragment() {
                 .into(binding.characterDetailsImageview)
 
 
-            val locationUrl = viewModel.singleCharacter.value!!.location.url
-            val locationId = locationUrl.substring(41).toInt()
-            binding.characterDetailsLocation.setOnClickListener {
-                navigator().showLocationDetails(locationId)
-            }
-            binding.characterDetailsOrigin.setOnClickListener {
-                navigator().showLocationDetails(locationId)
-            }
+//            val locationUrl = viewModel.singleCharacter.value!!.location.url
+//            val locationId = locationUrl.substring(41).toInt()
+//            binding.characterDetailsLocation.setOnClickListener {
+//                navigator().showLocationDetails(locationId)
+//            }
+//            binding.characterDetailsOrigin.setOnClickListener {
+//                navigator().showLocationDetails(locationId)
+//            }
 
             val episodesUrlsList: List<String> = viewModel.singleCharacter.value!!.episode
             val episodeIds = mutableListOf<Int>()
