@@ -3,7 +3,6 @@ package com.mytestprogram.rickmortyapplication.data
 import androidx.room.withTransaction
 import com.mytestprogram.rickmortyapplication.data.local.RickMortyDatabase
 import com.mytestprogram.rickmortyapplication.data.remote.CharacterRetrofitService
-import com.mytestprogram.rickmortyapplication.data.models.characters.SingleCharacterEntity
 import com.mytestprogram.rickmortyapplication.domain.models.episodes.AllEpisodes
 import com.mytestprogram.rickmortyapplication.domain.models.episodes.SingleEpisode
 import com.mytestprogram.rickmortyapplication.domain.models.locations.AllLocations

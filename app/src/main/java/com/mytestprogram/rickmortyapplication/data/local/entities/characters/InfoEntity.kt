@@ -1,4 +1,4 @@
-package com.mytestprogram.rickmortyapplication.data.models.characters
+package com.mytestprogram.rickmortyapplication.data.local.entities.characters
 
 data class Info(
     val count: Int,
