@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -16,6 +18,7 @@ import com.mytestprogram.rickmortyapplication.MainActivity
 import com.mytestprogram.rickmortyapplication.databinding.FragmentCharacterDetailsBinding
 import com.mytestprogram.rickmortyapplication.presentation.list_characters_screen.ListCharactersViewModel
 import com.mytestprogram.rickmortyapplication.presentation.list_episodes.ListEpisodesActionListener
+import com.mytestprogram.rickmortyapplication.utils.Resource
 import com.mytestprogram.rickmortyapplication.utils.navigator
 import javax.inject.Inject
 
@@ -68,14 +71,14 @@ class CharacterDetailsFragment : Fragment() {
                 .into(binding.characterDetailsImageview)
 
 
-//            val locationUrl = viewModel.singleCharacter.value!!.location.url
-//            val locationId = locationUrl.substring(41).toInt()
-//            binding.characterDetailsLocation.setOnClickListener {
-//                navigator().showLocationDetails(locationId)
-//            }
-//            binding.characterDetailsOrigin.setOnClickListener {
-//                navigator().showLocationDetails(locationId)
-//            }
+            val locationUrl = viewModel.singleCharacter.value!!.location.url
+            val locationId = locationUrl.substring(41).toInt()
+            binding.characterDetailsLocation.setOnClickListener {
+                navigator().showLocationDetails(locationId)
+            }
+            binding.characterDetailsOrigin.setOnClickListener {
+                navigator().showLocationDetails(locationId)
+            }
 
             val episodesUrlsList: List<String> = viewModel.singleCharacter.value!!.episode
             val episodeIds = mutableListOf<Int>()
@@ -87,26 +90,15 @@ class CharacterDetailsFragment : Fragment() {
                 adapter.episodes = viewModel.episodesList.value!!
             }
 
+            viewModel.isDataLoading.observe(viewLifecycleOwner) {
+                binding.characterDetailsProgressBar.isVisible = it
+            }
 
-
-
-
-
-//            viewModel.isError.observe(viewLifecycleOwner) {
-//                if (viewModel.isError.value == true) {
-//                    binding.characterDetailsErrorMessage.visibility = View.VISIBLE
-//                } else {
-//                    binding.characterDetailsErrorMessage.visibility = View.GONE
-//                }
-//            }
-//            viewModel.isDataLoading.observe(viewLifecycleOwner) {
-//                if (viewModel.isDataLoading.value == true) {
-//                    binding.characterDetailsProgressBar.visibility = View.VISIBLE
-//                } else {
-//                    binding.characterDetailsProgressBar.visibility = View.GONE
-//                }
-//            }
-
+            viewModel.isError.observe(viewLifecycleOwner) {
+                if (it == true) {
+                    Toast.makeText(context, "Check internet connection", Toast.LENGTH_LONG).show()
+                }
+            }
         }
 
         return binding.root

@@ -4,11 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mytestprogram.rickmortyapplication.data.models.characters.SingleCharacterEntity
 import com.mytestprogram.rickmortyapplication.domain.models.characters.SingleCharacter
 import com.mytestprogram.rickmortyapplication.domain.models.episodes.SingleEpisode
-import com.mytestprogram.rickmortyapplication.domain.usecases.LoadMultipleCharactersUseCase
-import com.mytestprogram.rickmortyapplication.domain.usecases.LoadSingleEpisodeByIdUseCase
+import com.mytestprogram.rickmortyapplication.domain.usecases.characters.LoadMultipleCharactersUseCase
+import com.mytestprogram.rickmortyapplication.domain.usecases.episodes.LoadSingleEpisodeByIdUseCase
+import com.mytestprogram.rickmortyapplication.utils.Resource
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,11 +18,11 @@ class EpisodeDetailsViewModel @Inject constructor(
     val loadMultipleCharactersUseCase: LoadMultipleCharactersUseCase
 ): ViewModel() {
 
-    private val _singleEpisode = MutableLiveData<SingleEpisode>()
-    val singleEpisode: LiveData<SingleEpisode> = _singleEpisode
+    private val _singleEpisode = MutableLiveData<SingleEpisode?>()
+    val singleEpisode: LiveData<SingleEpisode?> = _singleEpisode
 
-    private val _charactersList = MutableLiveData<List<SingleCharacterEntity>>()
-    val charactersList: LiveData<List<SingleCharacterEntity>> = _charactersList
+    private val _charactersList = MutableLiveData<List<SingleCharacter>?>()
+    val charactersList: LiveData<List<SingleCharacter>?> = _charactersList
 
     private val _isDataLoading = MutableLiveData<Boolean>()
     val isDataLoading: LiveData<Boolean> = _isDataLoading
@@ -31,29 +32,32 @@ class EpisodeDetailsViewModel @Inject constructor(
 
 
     fun loadEpisodeById(episodeId: Int) {
-        _isDataLoading.value = true
-        _isError.value = false
         viewModelScope.launch {
-            try {
-                val loadedSingleEpisode = loadSingleEpisodeByIdUseCase.loadEpisodeById(episodeId)
-                _singleEpisode.postValue(loadedSingleEpisode)
-                _isDataLoading.value = false
-                _isError.value = false
-            } catch (e: Exception) {
-                _isDataLoading.value = false
-                _isError.value = true
-
+            loadSingleEpisodeByIdUseCase.loadEpisodeById(episodeId).collectLatest { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        _singleEpisode.postValue(result.data)
+                        _isDataLoading.value = false
+                        _isError.postValue(false)
+                    }
+                    is Resource.Error -> {
+                        _isError.value = true
+                    }
+                    is Resource.Loading -> {
+                        _isDataLoading.value = true
+                    }
+                }
             }
         }
     }
-
     fun loadMultipleCharacters(characterIds: List<Int>) {
         viewModelScope.launch {
-            try {
-                val loadedMultipleCharacters = loadMultipleCharactersUseCase.loadMultipleCharacters(characterIds)
-//                _charactersList.postValue(loadedMultipleCharacters)
-            } catch (e:Exception) {
-
+            loadMultipleCharactersUseCase.loadMultipleCharacters(characterIds).collectLatest { result ->
+                when(result) {
+                    is Resource.Success -> {
+                        _charactersList.postValue(result.data)
+                    }
+                }
             }
         }
     }

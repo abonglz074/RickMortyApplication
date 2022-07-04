@@ -1,4 +1,4 @@
-package com.mytestprogram.rickmortyapplication.domain.usecases
+package com.mytestprogram.rickmortyapplication.domain.usecases.characters
 
 import com.mytestprogram.rickmortyapplication.domain.repository.CharactersRepository
 import com.mytestprogram.rickmortyapplication.data.local.entities.characters.SingleCharacterEntity

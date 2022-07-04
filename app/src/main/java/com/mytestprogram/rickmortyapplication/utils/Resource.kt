@@ -1,11 +1,18 @@
 package com.mytestprogram.rickmortyapplication.utils
 
-sealed class Resource<T>(
-    val data: T? = null,
-    val error: Throwable? = null
-){
+//sealed class Resource<T>(
+//    val data: T? = null,
+//    val error: Throwable? = null
+//){
+//
+//    class Success<T>(data: T): Resource<T>(data)
+//    class Loading<T>(data: T? = null): Resource<T>(data)
+//    class Error<T>(throwable: Throwable, data: T? = null) : Resource<T>(data, throwable)
+//}
+//typealias SimpleResource = Resource<Unit>
 
-    class Success<T>(data: T): Resource<T>(data)
-    class Loading<T>(data: T? = null): Resource<T>(data)
-    class Error<T>(throwable: Throwable, data: T? = null) : Resource<T>(data, throwable)
+sealed class Resource<T>(val data: T? = null, val message: String? = null) {
+    class Loading<T>(data: T? = null) : Resource<T>(data)
+    class Success<T>(data: T?) : Resource<T>(data)
+    class Error<T>(message: String, data: T? = null) : Resource<T>(data, message)
 }

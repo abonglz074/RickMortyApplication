@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.mytestprogram.rickmortyapplication.data.models.characters.SingleCharacterEntity
+import com.mytestprogram.rickmortyapplication.data.local.entities.characters.SingleCharacterEntity
 import com.mytestprogram.rickmortyapplication.databinding.CharactersListRecyclerviewItemBinding
 import com.mytestprogram.rickmortyapplication.domain.models.characters.SingleCharacter
 
@@ -14,7 +14,7 @@ class ListCharactersAdapter(
 ) :
     RecyclerView.Adapter<ListCharactersAdapter.ListCharactersViewHolder>(), View.OnClickListener {
 
-    var characters: List<SingleCharacterEntity> = emptyList()
+    var characters: List<SingleCharacter> = emptyList()
         set(newValue) {
             field = newValue
             notifyDataSetChanged()

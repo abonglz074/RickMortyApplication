@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -46,23 +48,17 @@ class ListLocationsFragment : Fragment() {
         binding.listLocationsRecyclerview.layoutManager = GridLayoutManager(context, 2)
         binding.listLocationsRecyclerview.adapter = adapter
 
-        viewModel.isError.observe(viewLifecycleOwner) {
-            if (viewModel.isError.value == true) {
-                binding.listLocationsErrorMessage.visibility = View.VISIBLE
-            } else {
-                binding.listLocationsErrorMessage.visibility = View.GONE
-            }
-        }
-        viewModel.isDataLoading.observe(viewLifecycleOwner) {
-            if (viewModel.isDataLoading.value == true) {
-                binding.listLocationsProgressBar.visibility = View.VISIBLE
-            } else {
-                binding.listLocationsProgressBar.visibility = View.GONE
-            }
-        }
-
         viewModel.locationsList.observe(viewLifecycleOwner) {
-            adapter.locations = viewModel.locationsList.value!!.results
+            adapter.locations = viewModel.locationsList.value ?: emptyList()
+            viewModel.isDataLoading.observe(viewLifecycleOwner) {
+                binding.listLocationsProgressBar.isVisible = it
+            }
+
+            viewModel.isError.observe(viewLifecycleOwner) {
+                if (it == true) {
+                    Toast.makeText(context, "Check internet connection", Toast.LENGTH_LONG).show()
+                }
+            }
         }
         return binding.root
     }

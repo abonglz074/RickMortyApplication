@@ -1,9 +1,9 @@
-package com.mytestprogram.rickmortyapplication.data.models.characters
+package com.mytestprogram.rickmortyapplication.data.local.entities.characters
 
-import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.mytestprogram.rickmortyapplication.domain.models.characters.SingleCharacter
 
 @Entity(tableName = "characters")
 data class SingleCharacterEntity(
@@ -13,11 +13,21 @@ data class SingleCharacterEntity(
     @PrimaryKey
     val id: Int,
     val image: String,
-    val location: Location,
+    @Embedded
+    val location: LocationEntity,
     val name: String,
-    val origin: Origin,
+    @Embedded
+    val origin: OriginEntity,
     val species: String,
     val status: String,
     val type: String,
     val url: String
-)
+){
+    fun toSingleCharacter(): SingleCharacter {
+        return SingleCharacter(
+            created, episode, gender, id, image, location, name, origin, species, status, type, url
+        )
+    }
+
+
+}

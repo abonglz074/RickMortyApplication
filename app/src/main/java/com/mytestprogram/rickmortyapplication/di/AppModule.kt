@@ -1,16 +1,21 @@
 package com.mytestprogram.rickmortyapplication.di
 
-import android.app.Application
 import android.content.Context
 import androidx.room.Room
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import com.mytestprogram.rickmortyapplication.data.CharactersRepositoryImpl
+import com.mytestprogram.rickmortyapplication.data.repository.CharactersRepositoryImpl
 import com.mytestprogram.rickmortyapplication.data.local.RickMortyDatabase
 import com.mytestprogram.rickmortyapplication.data.remote.CharacterRetrofitService
-import com.mytestprogram.rickmortyapplication.domain.repository.CharactersRepository
-import com.mytestprogram.rickmortyapplication.domain.usecases.*
-import com.mytestprogram.rickmortyapplication.presentation.character_details_screen.CharacterDetailsViewModel
+import com.mytestprogram.rickmortyapplication.domain.usecases.characters.LoadAllCharactersUseCase
+import com.mytestprogram.rickmortyapplication.domain.usecases.characters.LoadMultipleCharactersUseCase
+import com.mytestprogram.rickmortyapplication.domain.usecases.characters.LoadSingleCharacterByIdUseCase
+import com.mytestprogram.rickmortyapplication.domain.usecases.characters.LoadSingleCharacterByName
+import com.mytestprogram.rickmortyapplication.domain.usecases.episodes.LoadAllEpisodesUseCase
+import com.mytestprogram.rickmortyapplication.domain.usecases.episodes.LoadMultipleEpisodesUseCase
+import com.mytestprogram.rickmortyapplication.domain.usecases.episodes.LoadSingleEpisodeByIdUseCase
+import com.mytestprogram.rickmortyapplication.domain.usecases.locations.LoadAllLocationsUseCase
+import com.mytestprogram.rickmortyapplication.domain.usecases.locations.LoadSingleLocationByIdUseCase
 import com.mytestprogram.rickmortyapplication.presentation.character_details_screen.CharacterDetailsViewModelFactory
 import com.mytestprogram.rickmortyapplication.presentation.episode_details.EpisodeDetailsViewModelFactory
 import com.mytestprogram.rickmortyapplication.presentation.list_characters_screen.CharactersViewModelFactory
@@ -112,8 +117,19 @@ class AppModule(val context: Context) {
     }
 
     @Provides
-    fun provideCharactersViewModelFactory(loadAllCharactersUseCase: LoadAllCharactersUseCase): CharactersViewModelFactory {
-        return CharactersViewModelFactory(loadAllCharactersUseCase)
+    fun provideSingleCharacterByName(charactersRepositoryImpl: CharactersRepositoryImpl): LoadSingleCharacterByName {
+        return LoadSingleCharacterByName(charactersRepositoryImpl)
+    }
+
+    @Provides
+    fun provideCharactersViewModelFactory(
+        loadAllCharactersUseCase: LoadAllCharactersUseCase,
+        loadSingleCharacterByName: LoadSingleCharacterByName
+    ): CharactersViewModelFactory {
+        return CharactersViewModelFactory(
+            loadAllCharactersUseCase,
+            loadSingleCharacterByName
+        )
     }
 
     @Provides

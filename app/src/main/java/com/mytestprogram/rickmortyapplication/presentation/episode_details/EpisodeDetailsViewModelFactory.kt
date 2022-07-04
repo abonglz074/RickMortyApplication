@@ -2,10 +2,8 @@ package com.mytestprogram.rickmortyapplication.presentation.episode_details
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.mytestprogram.rickmortyapplication.domain.usecases.LoadMultipleCharactersUseCase
-import com.mytestprogram.rickmortyapplication.domain.usecases.LoadSingleCharacterByIdUseCase
-import com.mytestprogram.rickmortyapplication.domain.usecases.LoadSingleEpisodeByIdUseCase
-import com.mytestprogram.rickmortyapplication.presentation.character_details_screen.CharacterDetailsViewModel
+import com.mytestprogram.rickmortyapplication.domain.usecases.characters.LoadMultipleCharactersUseCase
+import com.mytestprogram.rickmortyapplication.domain.usecases.episodes.LoadSingleEpisodeByIdUseCase
 
 class EpisodeDetailsViewModelFactory(
     val loadSingleEpisodeByIdUseCase: LoadSingleEpisodeByIdUseCase,

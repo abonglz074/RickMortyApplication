@@ -1,40 +1,48 @@
 package com.mytestprogram.rickmortyapplication.data.remote
 
 
-import com.mytestprogram.rickmortyapplication.data.models.characters.AllCharactersEntity
-import com.mytestprogram.rickmortyapplication.data.models.characters.SingleCharacterEntity
+import com.mytestprogram.rickmortyapplication.data.remote.dto.characters.AllCharactersDto
+import com.mytestprogram.rickmortyapplication.data.remote.dto.characters.SingleCharacterDto
+import com.mytestprogram.rickmortyapplication.data.remote.dto.episodes.AllEpisodesDto
+import com.mytestprogram.rickmortyapplication.data.remote.dto.episodes.SingleEpisodeDto
+import com.mytestprogram.rickmortyapplication.data.remote.dto.locations.AllLocationsDto
+import com.mytestprogram.rickmortyapplication.data.remote.dto.locations.SingleLocationDto
 import com.mytestprogram.rickmortyapplication.domain.models.episodes.AllEpisodes
 import com.mytestprogram.rickmortyapplication.domain.models.episodes.SingleEpisode
 import com.mytestprogram.rickmortyapplication.domain.models.locations.AllLocations
 import com.mytestprogram.rickmortyapplication.domain.models.locations.SingleLocation
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface CharacterRetrofitService {
 
 
     @GET("character")
-    suspend fun loadAllCharacters(): AllCharactersEntity
+    suspend fun loadAllCharacters(): AllCharactersDto
 
     @GET("character/{character-id}")
-    suspend fun loadCharacterById(@Path("character-id") characterId: Int): SingleCharacterEntity
+    suspend fun loadCharacterById(@Path("character-id") characterId: Int): SingleCharacterDto
+
+    @GET("character")
+    suspend fun loadCharacterByName(@Query("name") characterName: String): SingleCharacterDto
 
     @GET("character/{character-id}")
-    suspend fun loadMultipleCharactersById(@Path("character-id") characterIds: List<Int>): List<SingleCharacterEntity>
+    suspend fun loadMultipleCharactersById(@Path("character-id") characterIds: List<Int>): List<SingleCharacterDto>
 
     @GET("episode")
-    suspend fun loadAllEpisodes(): AllEpisodes
+    suspend fun loadAllEpisodes(): AllEpisodesDto
 
     @GET("episode/{episode-id}")
-    suspend fun loadEpisodeById(@Path("episode-id") episodeId: Int): SingleEpisode
+    suspend fun loadEpisodeById(@Path("episode-id") episodeId: Int): SingleEpisodeDto
 
     @GET("episode/{episode-id}")
-    suspend fun loadMultipleEpisodesById(@Path("episode-id") episodeIds: List<Int>): List<SingleEpisode>
+    suspend fun loadMultipleEpisodesById(@Path("episode-id") episodeIds: List<Int>): List<SingleEpisodeDto>
 
     @GET("location")
-    suspend fun loadAllLocations(): AllLocations
+    suspend fun loadAllLocations(): AllLocationsDto
 
     @GET("location/{location-id}")
-    suspend fun loadLocationById(@Path("location-id") locationId: Int): SingleLocation
+    suspend fun loadLocationById(@Path("location-id") locationId: Int): SingleLocationDto
 
 }

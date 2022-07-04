@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -65,9 +67,18 @@ class LocationDetailsFragment : Fragment() {
             }
             viewModel.loadMultipleCharacters(characterIds)
 
-//            viewModel.charactersList.observe(viewLifecycleOwner) {
-//                adapter.characters = viewModel.charactersList.value!!
-//            }
+            viewModel.charactersList.observe(viewLifecycleOwner) {
+                adapter.characters = viewModel.charactersList.value!!
+            }
+            viewModel.isDataLoading.observe(viewLifecycleOwner) {
+                binding.locationDetailsProgressBar.isVisible = it
+            }
+
+            viewModel.isError.observe(viewLifecycleOwner) {
+                if (it == true) {
+                    Toast.makeText(context, "Check internet connection", Toast.LENGTH_LONG).show()
+                }
+            }
         }
 
 

@@ -1,4 +1,4 @@
-package com.mytestprogram.rickmortyapplication.domain.usecases
+package com.mytestprogram.rickmortyapplication.domain.usecases.episodes
 
 import com.mytestprogram.rickmortyapplication.domain.models.characters.AllCharacters
 import com.mytestprogram.rickmortyapplication.domain.models.characters.SingleCharacter

@@ -1,4 +1,4 @@
-package com.mytestprogram.rickmortyapplication.data.models
+package com.mytestprogram.rickmortyapplication
 
 import android.net.Uri
 import androidx.paging.PagingSource

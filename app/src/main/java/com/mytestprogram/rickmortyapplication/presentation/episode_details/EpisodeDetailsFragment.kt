@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
@@ -59,13 +61,21 @@ class EpisodeDetailsFragment: Fragment() {
                 characterIds.add(i.substring(42).toInt())
             }
             viewModel.loadMultipleCharacters(characterIds)
-//
-//            viewModel.charactersList.observe(viewLifecycleOwner) {
-//                adapter.characters = viewModel.charactersList.value!!
-//            }
+
+            viewModel.charactersList.observe(viewLifecycleOwner) {
+                adapter.characters = viewModel.charactersList.value!!
+            }
+
+            viewModel.isDataLoading.observe(viewLifecycleOwner) {
+                binding.episodeDetailsProgressBar.isVisible = it
+            }
+
+            viewModel.isError.observe(viewLifecycleOwner) {
+                if (it == true) {
+                    Toast.makeText(context, "Check internet connection", Toast.LENGTH_LONG).show()
+                }
+            }
         }
-
-
         return binding.root
     }
     companion object {

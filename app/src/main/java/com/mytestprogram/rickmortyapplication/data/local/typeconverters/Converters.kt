@@ -1,4 +1,4 @@
-package com.mytestprogram.rickmortyapplication.data.local
+package com.mytestprogram.rickmortyapplication.data.local.typeconverters
 
 import androidx.room.TypeConverter
 import com.google.gson.Gson

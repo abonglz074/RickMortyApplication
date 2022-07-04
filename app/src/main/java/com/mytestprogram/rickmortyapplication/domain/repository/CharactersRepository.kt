@@ -1,6 +1,7 @@
 package com.mytestprogram.rickmortyapplication.domain.repository
 
-import com.mytestprogram.rickmortyapplication.data.models.characters.SingleCharacterEntity
+import com.mytestprogram.rickmortyapplication.data.local.entities.characters.SingleCharacterEntity
+import com.mytestprogram.rickmortyapplication.domain.models.characters.SingleCharacter
 import com.mytestprogram.rickmortyapplication.domain.models.episodes.AllEpisodes
 import com.mytestprogram.rickmortyapplication.domain.models.episodes.SingleEpisode
 import com.mytestprogram.rickmortyapplication.domain.models.locations.AllLocations
@@ -10,19 +11,21 @@ import kotlinx.coroutines.flow.Flow
 
 interface CharactersRepository {
 
-    fun loadAllCharacters(): Flow<Resource<List<SingleCharacterEntity>>>
+    fun loadAllCharacters(): Flow<Resource<List<SingleCharacter>>>
 
-    fun loadCharacterById(characterId: Int): Flow<Resource<SingleCharacterEntity>>
+    fun loadCharacterById(characterId: Int): Flow<Resource<SingleCharacter>>
 
-    fun loadMultipleCharacters(characterIds: List<Int>): Flow<Resource<List<SingleCharacterEntity>>>
+    fun loadCharacterByName(characterName: String): Flow<Resource<SingleCharacter>>
 
-    suspend fun loadAllEpisodes(): AllEpisodes
+    fun loadMultipleCharacters(characterIds: List<Int>): Flow<Resource<List<SingleCharacter>>>
 
-    suspend fun loadEpisodesById(episodeId: Int): SingleEpisode
+    fun loadAllEpisodes(): Flow<Resource<List<SingleEpisode>>>
 
-    suspend fun loadMultipleEpisodes(episodeIds: List<Int>): List<SingleEpisode>
+    fun loadEpisodesById(episodeId: Int): Flow<Resource<SingleEpisode>>
 
-    suspend fun loadAllLocations(): AllLocations
+    fun loadMultipleEpisodes(episodeIds: List<Int>): Flow<Resource<List<SingleEpisode>>>
 
-    suspend fun loadLocationById(locationId: Int): SingleLocation
+    fun loadAllLocations(): Flow<Resource<List<SingleLocation>>>
+
+    fun loadLocationById(locationId: Int): Flow<Resource<SingleLocation>>
 }

@@ -1,8 +1,7 @@
 package com.mytestprogram.rickmortyapplication.domain.models.characters
 
-import androidx.room.PrimaryKey
-import com.mytestprogram.rickmortyapplication.data.models.characters.Location
-import com.mytestprogram.rickmortyapplication.data.models.characters.Origin
+import com.mytestprogram.rickmortyapplication.data.local.entities.characters.LocationEntity
+import com.mytestprogram.rickmortyapplication.data.local.entities.characters.OriginEntity
 
 data class SingleCharacter(
     val created: String,
@@ -10,9 +9,9 @@ data class SingleCharacter(
     val gender: String,
     val id: Int,
     val image: String,
-    val location: Location,
+    val location: LocationEntity,
     val name: String,
-    val origin: Origin,
+    val origin: OriginEntity,
     val species: String,
     val status: String,
     val type: String,

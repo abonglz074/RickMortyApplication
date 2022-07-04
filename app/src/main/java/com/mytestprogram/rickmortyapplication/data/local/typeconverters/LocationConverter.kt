@@ -1,17 +1,15 @@
-package com.mytestprogram.rickmortyapplication.data.local
+package com.mytestprogram.rickmortyapplication.data.local.typeconverters
 
-import androidx.room.TypeConverter
-import androidx.room.TypeConverters
-import com.mytestprogram.rickmortyapplication.data.models.characters.Location
+import com.mytestprogram.rickmortyapplication.data.local.entities.characters.LocationEntity
 
-class LocationConverter {
+class LocationConverter: Converters<LocationEntity>() {
 
-    @TypeConverter
-    fun fromLocation(location: Location): String {
-        return location.name
-    }
-    @TypeConverter
-    fun toLocation(name: String): Location {
-        return Location(name)
-    }
+//    @TypeConverter
+//    fun fromLocationToName(location: Location): List<String> {
+//        return listOf(location.name, location.url)
+//    }
+//    @TypeConverter
+//    fun toLocation(): Location {
+//        return Location(list)
+//    }
 }

@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -43,24 +45,18 @@ class ListEpisodesFragment : Fragment() {
         binding.listEpisodesRecyclerviewItem.layoutManager = GridLayoutManager(context, 2)
         binding.listEpisodesRecyclerviewItem.adapter = adapter
 
-        viewModel.isError.observe(viewLifecycleOwner) {
-            if (viewModel.isError.value == true) {
-                binding.listEpisodesErrorMessage.visibility = View.VISIBLE
-            } else {
-                binding.listEpisodesErrorMessage.visibility = View.GONE
+        viewModel.episodesList.observe(viewLifecycleOwner) {
+            adapter.episodes = viewModel.episodesList.value ?: emptyList()
+            viewModel.isDataLoading.observe(viewLifecycleOwner) {
+                binding.listEpisodesProgressBar.isVisible = it
             }
-        }
-        viewModel.isDataLoading.observe(viewLifecycleOwner) {
-            if (viewModel.isDataLoading.value == true) {
-                binding.listEpisodesProgressBar.visibility = View.VISIBLE
-            } else {
-                binding.listEpisodesProgressBar.visibility = View.GONE
-            }
-        }
 
-        viewModel.episodesList.observe(viewLifecycleOwner, Observer {
-            adapter.episodes = viewModel.episodesList.value!!.results
-        })
+            viewModel.isError.observe(viewLifecycleOwner) {
+                if (it == true) {
+                    Toast.makeText(context, "Check internet connection", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
         return binding.root
     }
 }

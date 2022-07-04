@@ -6,8 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mytestprogram.rickmortyapplication.domain.models.characters.SingleCharacter
 import com.mytestprogram.rickmortyapplication.domain.models.locations.SingleLocation
-import com.mytestprogram.rickmortyapplication.domain.usecases.LoadMultipleCharactersUseCase
-import com.mytestprogram.rickmortyapplication.domain.usecases.LoadSingleLocationByIdUseCase
+import com.mytestprogram.rickmortyapplication.domain.usecases.characters.LoadMultipleCharactersUseCase
+import com.mytestprogram.rickmortyapplication.domain.usecases.locations.LoadSingleLocationByIdUseCase
+import com.mytestprogram.rickmortyapplication.utils.Resource
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -16,11 +18,11 @@ class LocationDetailsViewModel @Inject constructor(
     val loadMultipleCharactersUseCase: LoadMultipleCharactersUseCase
 ): ViewModel() {
 
-    private val _singleLocation = MutableLiveData<SingleLocation>()
-    val singleLocation: LiveData<SingleLocation> = _singleLocation
+    private val _singleLocation = MutableLiveData<SingleLocation?>()
+    val singleLocation: LiveData<SingleLocation?> = _singleLocation
 
-    private val _charactersList = MutableLiveData<List<SingleCharacter>>()
-    val charactersList: LiveData<List<SingleCharacter>> = _charactersList
+    private val _charactersList = MutableLiveData<List<SingleCharacter>?>()
+    val charactersList: LiveData<List<SingleCharacter>?> = _charactersList
 
     private val _isDataLoading = MutableLiveData<Boolean>()
     val isDataLoading: LiveData<Boolean> = _isDataLoading
@@ -30,29 +32,32 @@ class LocationDetailsViewModel @Inject constructor(
 
 
     fun loadLocationById(locationId: Int) {
-        _isDataLoading.value = true
-        _isError.value = false
         viewModelScope.launch {
-            try {
-                val loadedSingleLocation = loadSingleLocationByIdUseCase.loadLocationById(locationId)
-                _singleLocation.postValue(loadedSingleLocation)
-                _isDataLoading.value = false
-                _isError.value = false
-            } catch (e: Exception) {
-                _isDataLoading.value = false
-                _isError.value = true
-
+            loadSingleLocationByIdUseCase.loadLocationById(locationId).collectLatest { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        _singleLocation.postValue(result.data)
+                        _isDataLoading.value = false
+                        _isError.postValue(false)
+                    }
+                    is Resource.Error -> {
+                        _isError.value = true
+                    }
+                    is Resource.Loading -> {
+                        _isDataLoading.value = true
+                    }
+                }
             }
         }
     }
-
     fun loadMultipleCharacters(characterIds: List<Int>) {
         viewModelScope.launch {
-            try {
-                val loadedMultipleCharacters = loadMultipleCharactersUseCase.loadMultipleCharacters(characterIds)
-//                _charactersList.postValue(loadedMultipleCharacters)
-            } catch (e:Exception) {
-
+            loadMultipleCharactersUseCase.loadMultipleCharacters(characterIds).collectLatest { result ->
+                when(result) {
+                    is Resource.Success -> {
+                        _charactersList.postValue(result.data)
+                    }
+                }
             }
         }
     }

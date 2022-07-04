@@ -2,7 +2,7 @@ package com.mytestprogram.rickmortyapplication.presentation.list_episodes
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.mytestprogram.rickmortyapplication.domain.usecases.LoadAllEpisodesUseCase
+import com.mytestprogram.rickmortyapplication.domain.usecases.episodes.LoadAllEpisodesUseCase
 
 class ListEpisodesViewModelFactory(
     private val loadAllEpisodesUseCase: LoadAllEpisodesUseCase
