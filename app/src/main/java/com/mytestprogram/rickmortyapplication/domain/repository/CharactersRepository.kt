@@ -15,7 +15,7 @@ interface CharactersRepository {
 
     fun loadCharacterById(characterId: Int): Flow<Resource<SingleCharacter>>
 
-    fun loadCharacterByName(characterName: String): Flow<Resource<SingleCharacter>>
+    fun filterCharacterByName(characterName: String): Flow<Resource<List<SingleCharacter>>>
 
     fun loadMultipleCharacters(characterIds: List<Int>): Flow<Resource<List<SingleCharacter>>>
 
@@ -23,9 +23,13 @@ interface CharactersRepository {
 
     fun loadEpisodesById(episodeId: Int): Flow<Resource<SingleEpisode>>
 
+    fun filterEpisodeByName(episodeName: String): Flow<Resource<List<SingleEpisode>>>
+
     fun loadMultipleEpisodes(episodeIds: List<Int>): Flow<Resource<List<SingleEpisode>>>
 
     fun loadAllLocations(): Flow<Resource<List<SingleLocation>>>
 
     fun loadLocationById(locationId: Int): Flow<Resource<SingleLocation>>
+
+    fun filterLocationByName(locationName: String): Flow<Resource<List<SingleLocation>>>
 }

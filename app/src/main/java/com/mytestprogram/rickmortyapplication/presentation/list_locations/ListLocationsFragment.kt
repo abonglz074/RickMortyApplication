@@ -5,12 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.mytestprogram.rickmortyapplication.App
 import com.mytestprogram.rickmortyapplication.MainActivity
+import com.mytestprogram.rickmortyapplication.R
 import com.mytestprogram.rickmortyapplication.databinding.FragmentListEpisodesBinding
 import com.mytestprogram.rickmortyapplication.databinding.FragmentListLocationsBinding
 import com.mytestprogram.rickmortyapplication.presentation.list_episodes.ListEpisodesActionListener
@@ -59,6 +61,41 @@ class ListLocationsFragment : Fragment() {
                     Toast.makeText(context, "Check internet connection", Toast.LENGTH_LONG).show()
                 }
             }
+
+
+            val searchItem = binding.toolbar.menu.findItem(R.id.search)
+            val searchView = searchItem.actionView as SearchView
+            searchView.maxWidth = Integer.MAX_VALUE
+            searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    if (!query.isNullOrBlank()) {
+                        viewModel.onSearch(query)
+                        viewModel.filterLocations.observe(viewLifecycleOwner) {
+                            adapter.locations = viewModel.filterLocations.value ?: emptyList()
+                        }
+                    } else {
+                        viewModel.loadAllLocations()
+                        adapter.locations = viewModel.locationsList.value ?: emptyList()
+                    }
+
+                    return true
+                }
+
+                override fun onQueryTextChange(query: String?): Boolean {
+                    if (!query.isNullOrBlank()) {
+                        viewModel.onSearch(query)
+                        viewModel.filterLocations.observe(viewLifecycleOwner) {
+                            adapter.locations = viewModel.filterLocations.value ?: emptyList()
+                        }
+                    } else {
+                        viewModel.loadAllLocations()
+                        adapter.locations = viewModel.locationsList.value ?: emptyList()
+                    }
+
+                    return true
+                }
+            })
+
         }
         return binding.root
     }

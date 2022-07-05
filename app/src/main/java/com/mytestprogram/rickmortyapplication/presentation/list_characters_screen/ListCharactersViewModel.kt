@@ -2,8 +2,8 @@ package com.mytestprogram.rickmortyapplication.presentation.list_characters_scre
 
 import androidx.lifecycle.*
 import com.mytestprogram.rickmortyapplication.domain.models.characters.SingleCharacter
+import com.mytestprogram.rickmortyapplication.domain.usecases.characters.FilterCharactersUseCase
 import com.mytestprogram.rickmortyapplication.domain.usecases.characters.LoadAllCharactersUseCase
-import com.mytestprogram.rickmortyapplication.domain.usecases.characters.LoadSingleCharacterByName
 import com.mytestprogram.rickmortyapplication.utils.Resource
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -11,26 +11,20 @@ import javax.inject.Inject
 
 class ListCharactersViewModel @Inject constructor(
     private val loadAllCharactersUseCase: LoadAllCharactersUseCase,
-    private val loadSingleCharacterByName: LoadSingleCharacterByName
+    private val filterCharactersUseCase: FilterCharactersUseCase
 ) : ViewModel() {
 
     private val _allCharacters = MutableLiveData<List<SingleCharacter>?>()
     val allCharacters: LiveData<List<SingleCharacter>?> = _allCharacters
+
+    private val _filterCharacter = MutableLiveData<List<SingleCharacter>>()
+    val filterCharacter: LiveData<List<SingleCharacter>> = _filterCharacter
 
     private val _isDataLoading = MutableLiveData<Boolean>()
     val isDataLoading: LiveData<Boolean> = _isDataLoading
 
     private val _isError = MutableLiveData<Boolean>()
     val isError: LiveData<Boolean> = _isError
-
-//    private val _searchQuery = mutableStateOf("")
-//    val searchQuery: State<String> = _searchQuery
-//
-//    private val _state = mutableStateOf(ListCharactersState())
-//    val state: State<ListCharactersState> = _state
-//
-//    private val _eventFlow = MutableSharedFlow<UIEvent>()
-//    val eventFlow = _eventFlow.asSharedFlow()
 
     fun loadAllCharacters() {
         viewModelScope.launch {
@@ -58,44 +52,21 @@ class ListCharactersViewModel @Inject constructor(
             }
         }
     }
+
+    fun onSearch(queryName: String) {
+        viewModelScope.launch {
+            filterCharactersUseCase.filterCharacterByName(queryName).collectLatest { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        _filterCharacter.postValue(result.data ?: emptyList())
+                        _isDataLoading.postValue(false)
+                        _isError.postValue(false)
+                    }
+
+                }
+            }
+        }
+    }
 }
 
-//    private var searchJob: Job? = null
-
-//    fun onSearch(query: String) {
-//        _searchQuery.value = query
-//        searchJob?.cancel()
-//        searchJob = viewModelScope.launch {
-//            delay(500L)
-//            loadSingleCharacterByName.loadCharacterByName(query)
-//                .onEach { result ->
-//                    when (result) {
-//                        is Resource.Success -> {
-//                            _state.value = state.value.copy(
-//                                allCharacters = result.data ?: emptyList(),
-//                                isLoading = false
-//                            )
-//                        }
-//                        is Resource.Error -> {
-//                            _state.value = state.value.copy(
-//                                allCharacters = result.data ?: emptyList(),
-//                                isLoading = false
-//                            )
-//                            _eventFlow.emit(
-//                                UIEvent.ShowToast(
-//                                    "Unknown error"
-//                                )
-//                            )
-//                        }
-//                        is Resource.Loading -> {
-//                            _state.value = state.value.copy(
-//                                allCharacters = result.data ?: emptyList(),
-//                                isLoading = true
-//                            )
-//                        }
-//
-//                    }
-//                }.launchIn(this)
-//        }
-//    }
 

@@ -9,6 +9,7 @@ import com.mytestprogram.rickmortyapplication.domain.repository.CharactersReposi
 import com.mytestprogram.rickmortyapplication.utils.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import retrofit2.HttpException
 import java.io.IOException
 import javax.inject.Inject
@@ -73,31 +74,34 @@ class CharactersRepositoryImpl @Inject constructor(
         emit(Resource.Success(dataFromDb))
     }
 
-    override fun loadCharacterByName(characterName: String): Flow<Resource<SingleCharacter>> =
+    override fun filterCharacterByName(characterName: String): Flow<Resource<List<SingleCharacter>>> =
         flow {
             emit(Resource.Loading())
             val dataFromDb =
-                singleCharacterDao.getCharacterByName(characterName).toSingleCharacter()
+                singleCharacterDao.getCharacterByName(characterName).map { it.toSingleCharacter() }
             emit(Resource.Loading(dataFromDb))
             try {
-                val remoteCharacters = characterRetrofitService.loadCharacterByName(characterName)
+                val remoteCharacters = characterRetrofitService.filterCharacters(characterName).results
+                    .map { it.toSingleCharacterEntity() }
+                singleCharacterDao.insertAllCharacters(remoteCharacters)
             } catch (e: HttpException) {
                 emit(
                     Resource.Error(
                         message = "Oops, something went wrong!",
-                        data = dataFromDb
+                        data = emptyList()
                     )
                 )
             } catch (e: IOException) {
                 emit(
                     Resource.Error(
                         message = "Check internet connection!",
-                        data = dataFromDb
+                        data = emptyList()
                     )
                 )
             }
 
-            val newData = singleCharacterDao.getCharacterByName(characterName).toSingleCharacter()
+            val newData = singleCharacterDao.getCharacterByName(characterName)
+                .map { it.toSingleCharacter() }
             emit(Resource.Success(newData))
         }
 
@@ -180,33 +184,65 @@ class CharactersRepositoryImpl @Inject constructor(
         emit(Resource.Success(dataFromDb))
     }
 
-    override fun loadMultipleEpisodes(episodeIds: List<Int>): Flow<Resource<List<SingleEpisode>>> = flow {
-        emit(Resource.Loading())
-        val dataFromDb = singleCharacterDao.getMultipleEpisodesById(episodeIds)
-            .map { it.toSingleEpisode() }
-        emit(Resource.Loading(dataFromDb))
-        try {
-            val remoteEpisodes = characterRetrofitService.loadMultipleEpisodesById(episodeIds)
-            singleCharacterDao.insertAllEpisodes(remoteEpisodes.map { it.toSingleEpisodeEntity() })
-        } catch (e: HttpException) {
-            emit(
-                Resource.Error(
-                    message = "Oops, something went wrong!",
-                    data = dataFromDb
+    override fun loadMultipleEpisodes(episodeIds: List<Int>): Flow<Resource<List<SingleEpisode>>> =
+        flow {
+            emit(Resource.Loading())
+            val dataFromDb = singleCharacterDao.getMultipleEpisodesById(episodeIds)
+                .map { it.toSingleEpisode() }
+            emit(Resource.Loading(dataFromDb))
+            try {
+                val remoteEpisodes = characterRetrofitService.loadMultipleEpisodesById(episodeIds)
+                singleCharacterDao.insertAllEpisodes(remoteEpisodes.map { it.toSingleEpisodeEntity() })
+            } catch (e: HttpException) {
+                emit(
+                    Resource.Error(
+                        message = "Oops, something went wrong!",
+                        data = dataFromDb
+                    )
                 )
-            )
-        } catch (e: IOException) {
-            emit(
-                Resource.Error(
-                    message = "Check internet connection!",
-                    data = dataFromDb
+            } catch (e: IOException) {
+                emit(
+                    Resource.Error(
+                        message = "Check internet connection!",
+                        data = dataFromDb
+                    )
                 )
-            )
+            }
+            val newData =
+                singleCharacterDao.getMultipleEpisodesById(episodeIds).map { it.toSingleEpisode() }
+            emit(Resource.Success(newData))
         }
-        val newData =
-            singleCharacterDao.getMultipleEpisodesById(episodeIds).map { it.toSingleEpisode() }
-        emit(Resource.Success(newData))
-    }
+
+    override fun filterEpisodeByName(episodeName: String): Flow<Resource<List<SingleEpisode>>> =
+        flow {
+            emit(Resource.Loading())
+            val dataFromDb =
+                singleCharacterDao.getEpisodeByName(episodeName).map { it.toSingleEpisode() }
+            emit(Resource.Loading(dataFromDb))
+            try {
+                val remoteCharacters = characterRetrofitService.filterEpisodes(episodeName).results
+                    .map { it.toSingleEpisodeEntity() }
+                singleCharacterDao.insertAllEpisodes(remoteCharacters)
+            } catch (e: HttpException) {
+                emit(
+                    Resource.Error(
+                        message = "Oops, something went wrong!",
+                        data = emptyList()
+                    )
+                )
+            } catch (e: IOException) {
+                emit(
+                    Resource.Error(
+                        message = "Check internet connection!",
+                        data = emptyList()
+                    )
+                )
+            }
+
+            val newData = singleCharacterDao.getEpisodeByName(episodeName)
+                .map { it.toSingleEpisode() }
+            emit(Resource.Success(newData))
+        }
 
     override fun loadAllLocations(): Flow<Resource<List<SingleLocation>>> = flow {
         emit(Resource.Loading())
@@ -259,5 +295,36 @@ class CharactersRepositoryImpl @Inject constructor(
 //
 //        val newData = singleCharacterDao.getCharacterById(characterId).toSingleCharacter()
         emit(Resource.Success(dataFromDb))
+    }
+
+    override fun filterLocationByName(locationName: String): Flow<Resource<List<SingleLocation>>> =
+    flow {
+        emit(Resource.Loading())
+        val dataFromDb =
+            singleCharacterDao.getLocationsByName(locationName).map { it.toSingleLocation() }
+        emit(Resource.Loading(dataFromDb))
+        try {
+            val remoteCharacters = characterRetrofitService.filterLocations(locationName).results
+                .map { it.toSingleLocationEntity() }
+            singleCharacterDao.insertAllLocations(remoteCharacters)
+        } catch (e: HttpException) {
+            emit(
+                Resource.Error(
+                    message = "Oops, something went wrong!",
+                    data = emptyList()
+                )
+            )
+        } catch (e: IOException) {
+            emit(
+                Resource.Error(
+                    message = "Check internet connection!",
+                    data = emptyList()
+                )
+            )
+        }
+
+        val newData = singleCharacterDao.getLocationsByName(locationName)
+            .map { it.toSingleLocation() }
+        emit(Resource.Success(newData))
     }
 }

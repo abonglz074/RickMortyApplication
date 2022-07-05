@@ -6,10 +6,10 @@ import com.mytestprogram.rickmortyapplication.utils.Resource
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class LoadSingleCharacterByName @Inject constructor(
+class FilterCharactersUseCase @Inject constructor(
     private val charactersRepository: CharactersRepository
-) {
-    fun loadCharacterByName(characterName: String): Flow<Resource<SingleCharacter>> {
-        return charactersRepository.loadCharacterByName(characterName)
+){
+    fun filterCharacterByName(characterName: String): Flow<Resource<List<SingleCharacter>>> {
+        return charactersRepository.filterCharacterByName(characterName)
     }
 }

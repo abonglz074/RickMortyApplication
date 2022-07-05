@@ -7,13 +7,15 @@ import com.google.gson.GsonBuilder
 import com.mytestprogram.rickmortyapplication.data.repository.CharactersRepositoryImpl
 import com.mytestprogram.rickmortyapplication.data.local.RickMortyDatabase
 import com.mytestprogram.rickmortyapplication.data.remote.CharacterRetrofitService
+import com.mytestprogram.rickmortyapplication.domain.usecases.characters.FilterCharactersUseCase
 import com.mytestprogram.rickmortyapplication.domain.usecases.characters.LoadAllCharactersUseCase
 import com.mytestprogram.rickmortyapplication.domain.usecases.characters.LoadMultipleCharactersUseCase
 import com.mytestprogram.rickmortyapplication.domain.usecases.characters.LoadSingleCharacterByIdUseCase
-import com.mytestprogram.rickmortyapplication.domain.usecases.characters.LoadSingleCharacterByName
+import com.mytestprogram.rickmortyapplication.domain.usecases.episodes.FilterEpisodesUseCase
 import com.mytestprogram.rickmortyapplication.domain.usecases.episodes.LoadAllEpisodesUseCase
 import com.mytestprogram.rickmortyapplication.domain.usecases.episodes.LoadMultipleEpisodesUseCase
 import com.mytestprogram.rickmortyapplication.domain.usecases.episodes.LoadSingleEpisodeByIdUseCase
+import com.mytestprogram.rickmortyapplication.domain.usecases.locations.FilterLocationsUseCase
 import com.mytestprogram.rickmortyapplication.domain.usecases.locations.LoadAllLocationsUseCase
 import com.mytestprogram.rickmortyapplication.domain.usecases.locations.LoadSingleLocationByIdUseCase
 import com.mytestprogram.rickmortyapplication.presentation.character_details_screen.CharacterDetailsViewModelFactory
@@ -65,8 +67,11 @@ class AppModule(val context: Context) {
     }
 
     @Provides
-    fun provideListLocationsViewModelFactory(loadAllLocationsUseCase: LoadAllLocationsUseCase): ListLocationsViewModelFactory {
-        return ListLocationsViewModelFactory(loadAllLocationsUseCase)
+    fun provideListLocationsViewModelFactory(
+        loadAllLocationsUseCase: LoadAllLocationsUseCase,
+        filterLocationsUseCase: FilterLocationsUseCase
+    ): ListLocationsViewModelFactory {
+        return ListLocationsViewModelFactory(loadAllLocationsUseCase, filterLocationsUseCase)
     }
 
     @Provides
@@ -91,8 +96,11 @@ class AppModule(val context: Context) {
     }
 
     @Provides
-    fun provideListEpisodesViewModelFactory(loadAllEpisodesUseCase: LoadAllEpisodesUseCase): ListEpisodesViewModelFactory {
-        return ListEpisodesViewModelFactory(loadAllEpisodesUseCase)
+    fun provideListEpisodesViewModelFactory(
+        loadAllEpisodesUseCase: LoadAllEpisodesUseCase,
+        filterEpisodesUseCase: FilterEpisodesUseCase
+    ): ListEpisodesViewModelFactory {
+        return ListEpisodesViewModelFactory(loadAllEpisodesUseCase, filterEpisodesUseCase)
     }
 
     @Provides
@@ -117,18 +125,28 @@ class AppModule(val context: Context) {
     }
 
     @Provides
-    fun provideSingleCharacterByName(charactersRepositoryImpl: CharactersRepositoryImpl): LoadSingleCharacterByName {
-        return LoadSingleCharacterByName(charactersRepositoryImpl)
+    fun provideSingleCharacterByName(charactersRepositoryImpl: CharactersRepositoryImpl): FilterCharactersUseCase {
+        return FilterCharactersUseCase(charactersRepositoryImpl)
+    }
+
+    @Provides
+    fun provideSingleEpisodeByName(charactersRepositoryImpl: CharactersRepositoryImpl): FilterEpisodesUseCase {
+        return FilterEpisodesUseCase(charactersRepositoryImpl)
+    }
+
+    @Provides
+    fun provideSingleLocationByName(charactersRepositoryImpl: CharactersRepositoryImpl): FilterLocationsUseCase {
+        return FilterLocationsUseCase(charactersRepositoryImpl)
     }
 
     @Provides
     fun provideCharactersViewModelFactory(
         loadAllCharactersUseCase: LoadAllCharactersUseCase,
-        loadSingleCharacterByName: LoadSingleCharacterByName
+        filterCharactersUseCase: FilterCharactersUseCase
     ): CharactersViewModelFactory {
         return CharactersViewModelFactory(
             loadAllCharactersUseCase,
-            loadSingleCharacterByName
+            filterCharactersUseCase
         )
     }
 

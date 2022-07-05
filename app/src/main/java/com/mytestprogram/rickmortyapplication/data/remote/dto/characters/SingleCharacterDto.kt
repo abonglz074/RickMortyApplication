@@ -10,9 +10,9 @@ data class SingleCharacterDto(
     val gender: String,
     val id: Int,
     val image: String,
-    val location: LocationEntity,
+    val location: LocationDto,
     val name: String,
-    val origin: OriginEntity,
+    val origin: OriginDto,
     val species: String,
     val status: String,
     val type: String,
@@ -20,7 +20,7 @@ data class SingleCharacterDto(
 ) {
     fun toSingleCharacterEntity(): SingleCharacterEntity {
         return SingleCharacterEntity(
-            created, episode, gender, id, image, location, name, origin, species, status, type, url
+            created, episode, gender, id, image, location.toLocationEntity(), name, origin.toOriginEntity(), species, status, type, url
         )
     }
 }

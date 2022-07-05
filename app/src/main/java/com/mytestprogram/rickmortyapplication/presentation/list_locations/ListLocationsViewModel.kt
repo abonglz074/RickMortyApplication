@@ -4,7 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.mytestprogram.rickmortyapplication.domain.models.episodes.SingleEpisode
 import com.mytestprogram.rickmortyapplication.domain.models.locations.SingleLocation
+import com.mytestprogram.rickmortyapplication.domain.usecases.locations.FilterLocationsUseCase
 import com.mytestprogram.rickmortyapplication.domain.usecases.locations.LoadAllLocationsUseCase
 import com.mytestprogram.rickmortyapplication.utils.Resource
 import kotlinx.coroutines.flow.collectLatest
@@ -12,11 +14,15 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class ListLocationsViewModel @Inject constructor(
-    private val loadAllLocationsUseCase: LoadAllLocationsUseCase
+    private val loadAllLocationsUseCase: LoadAllLocationsUseCase,
+    private val filterLocationsUseCase: FilterLocationsUseCase
 ): ViewModel() {
 
     private val _locationsList = MutableLiveData<List<SingleLocation>?>()
     val locationsList: LiveData<List<SingleLocation>?> = _locationsList
+
+    private val _filterLocations = MutableLiveData<List<SingleLocation>>()
+    val filterLocations: LiveData<List<SingleLocation>> = _filterLocations
 
     private val _isDataLoading = MutableLiveData<Boolean>()
     val isDataLoading: LiveData<Boolean> = _isDataLoading
@@ -28,7 +34,7 @@ class ListLocationsViewModel @Inject constructor(
         loadAllLocations()
     }
 
-    private fun loadAllLocations() {
+    fun loadAllLocations() {
         viewModelScope.launch {
             loadAllLocationsUseCase.loadAllLocations().collectLatest { result ->
                 when (result) {
@@ -50,6 +56,20 @@ class ListLocationsViewModel @Inject constructor(
                         }
                         _isError.postValue(false)
                     }
+                }
+            }
+        }
+    }
+    fun onSearch(queryName: String) {
+        viewModelScope.launch {
+            filterLocationsUseCase.filterLocationsByName(queryName).collectLatest { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        _filterLocations.postValue(result.data ?: emptyList())
+                        _isDataLoading.postValue(false)
+                        _isError.postValue(false)
+                    }
+
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.mytestprogram.rickmortyapplication.data.local
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -19,8 +20,8 @@ interface SingleCharacterDao {
     @Query("SELECT * FROM characters WHERE id = :id")
     suspend fun getCharacterById(id: Int): SingleCharacterEntity
 
-    @Query("SELECT * FROM characters WHERE name = :name")
-    suspend fun getCharacterByName(name: String): SingleCharacterEntity
+    @Query("SELECT * FROM characters WHERE name LIKE :name")
+    suspend fun getCharacterByName(name: String): List<SingleCharacterEntity>
 
     @Query("SELECT * FROM characters WHERE id IN (:id)")
     suspend fun getMultipleCharactersById(id: List<Int>): List<SingleCharacterEntity>
@@ -28,8 +29,8 @@ interface SingleCharacterDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllCharacters(characters: List<SingleCharacterEntity>)
 
-//    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    suspend fun insert(character: SingleCharacterEntity)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(character: SingleCharacterEntity)
 
     @Query("DELETE FROM characters")
     suspend fun deleteAllCharacters()
@@ -48,6 +49,10 @@ interface SingleCharacterDao {
 
     @Query("SELECT * FROM episodes WHERE id IN (:id)")
     suspend fun getMultipleEpisodesById(id: List<Int>): List<SingleEpisodeEntity>
+
+    @Query("SELECT * FROM episodes WHERE name LIKE :name")
+    suspend fun getEpisodeByName(name: String): List<SingleEpisodeEntity>
+
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllEpisodes(episodes: List<SingleEpisodeEntity>)
@@ -69,6 +74,9 @@ interface SingleCharacterDao {
 
     @Query("SELECT * FROM locations WHERE id = :id")
     suspend fun getLocationsById(id: Int): SingleLocationEntity
+
+    @Query("SELECT * FROM locations WHERE name LIKE :name")
+    suspend fun getLocationsByName(name: String): List<SingleLocationEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllLocations(locations: List<SingleLocationEntity>)
