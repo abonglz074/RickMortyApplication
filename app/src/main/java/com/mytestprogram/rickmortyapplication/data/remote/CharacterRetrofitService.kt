@@ -25,7 +25,13 @@ interface CharacterRetrofitService {
     suspend fun loadCharacterById(@Path("character-id") characterId: Int): SingleCharacterDto
 
     @GET("character")
-    suspend fun filterCharacters(@Query("name") characterName: String): AllCharactersDto
+    suspend fun filterCharacterByName(@Query("name") characterName: String): AllCharactersDto
+
+    @GET("character")
+    suspend fun filterCharactersByStatus(@Query("status") characterStatus: String): AllCharactersDto
+
+    @GET("character")
+    suspend fun filterCharactersByGender(@Query("gender") characterGender: String): AllCharactersDto
 
     @GET("character/{character-id}")
     suspend fun loadMultipleCharactersById(@Path("character-id") characterIds: List<Int>): List<SingleCharacterDto>

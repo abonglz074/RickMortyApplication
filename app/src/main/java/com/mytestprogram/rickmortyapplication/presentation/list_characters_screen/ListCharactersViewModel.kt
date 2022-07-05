@@ -67,6 +67,36 @@ class ListCharactersViewModel @Inject constructor(
             }
         }
     }
+
+    fun filterByStatus(status: String) {
+        viewModelScope.launch {
+            filterCharactersUseCase.filterCharacterByStatus(status).collectLatest { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        _filterCharacter.postValue(result.data ?: emptyList())
+                        _isDataLoading.postValue(false)
+                        _isError.postValue(false)
+                    }
+
+                }
+            }
+        }
+    }
+
+    fun filterByGender(gender: String) {
+        viewModelScope.launch {
+            filterCharactersUseCase.filterCharacterByGender(gender).collectLatest { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        _filterCharacter.postValue(result.data ?: emptyList())
+                        _isDataLoading.postValue(false)
+                        _isError.postValue(false)
+                    }
+
+                }
+            }
+        }
+    }
 }
 
 

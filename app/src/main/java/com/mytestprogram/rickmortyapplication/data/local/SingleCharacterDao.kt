@@ -23,6 +23,12 @@ interface SingleCharacterDao {
     @Query("SELECT * FROM characters WHERE name LIKE :name")
     suspend fun getCharacterByName(name: String): List<SingleCharacterEntity>
 
+    @Query("SELECT * FROM characters WHERE status LIKE :status")
+    suspend fun getCharacterByStatus(status: String): List<SingleCharacterEntity>
+
+    @Query("SELECT * FROM characters WHERE gender LIKE :gender")
+    suspend fun getCharacterByGender(gender: String): List<SingleCharacterEntity>
+
     @Query("SELECT * FROM characters WHERE id IN (:id)")
     suspend fun getMultipleCharactersById(id: List<Int>): List<SingleCharacterEntity>
 

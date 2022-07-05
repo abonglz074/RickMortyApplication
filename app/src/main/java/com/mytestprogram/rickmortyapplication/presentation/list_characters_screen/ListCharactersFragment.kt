@@ -1,18 +1,18 @@
 package com.mytestprogram.rickmortyapplication.presentation.list_characters_screen
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.Toast
+import android.view.*
+import android.widget.*
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mytestprogram.rickmortyapplication.App
 import com.mytestprogram.rickmortyapplication.MainActivity
 import com.mytestprogram.rickmortyapplication.R
+import com.mytestprogram.rickmortyapplication.databinding.FilterCharactersBinding
 import com.mytestprogram.rickmortyapplication.databinding.FragmentListCharactersBinding
 import com.mytestprogram.rickmortyapplication.utils.navigator
 import javax.inject.Inject
@@ -96,8 +96,88 @@ class ListCharactersFragment : Fragment() {
                     return true
                 }
             })
+
+            binding.toolbar.setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.filter_button -> {
+                        showFilterDialog(inflater)
+                        true
+                    }
+                    else -> {
+                        false
+                    }
+                }
+            }
+
         }
         return binding.root
+    }
+
+    private fun showFilterDialog(inflater: LayoutInflater) {
+        val binding = FilterCharactersBinding.inflate(inflater)
+        val dialog = BottomSheetDialog(requireContext())
+        dialog.setContentView(binding.root)
+        binding.statusAlive.setOnClickListener {
+            viewModel.filterByStatus(binding.statusAlive.text.toString())
+            dialog.dismiss()
+            viewModel.filterCharacter.observe(viewLifecycleOwner) {
+                adapter.characters = viewModel.filterCharacter.value ?: emptyList()
+            }
+        }
+
+        binding.statusDead.setOnClickListener {
+            viewModel.filterByStatus(binding.statusDead.text.toString())
+            dialog.dismiss()
+            viewModel.filterCharacter.observe(viewLifecycleOwner) {
+                adapter.characters = viewModel.filterCharacter.value ?: emptyList()
+            }
+        }
+        binding.statusUnknown.setOnClickListener {
+            viewModel.filterByStatus(binding.statusUnknown.text.toString())
+            dialog.dismiss()
+            viewModel.filterCharacter.observe(viewLifecycleOwner) {
+                adapter.characters = viewModel.filterCharacter.value ?: emptyList()
+            }
+        }
+        binding.genderMale.setOnClickListener {
+            viewModel.filterByGender(binding.genderMale.text.toString())
+            dialog.dismiss()
+            viewModel.filterCharacter.observe(viewLifecycleOwner) {
+                adapter.characters = viewModel.filterCharacter.value ?: emptyList()
+            }
+        }
+        dialog.show()
+        binding.genderFemale.setOnClickListener {
+            viewModel.filterByGender(binding.genderFemale.text.toString())
+            dialog.dismiss()
+            viewModel.filterCharacter.observe(viewLifecycleOwner) {
+                adapter.characters = viewModel.filterCharacter.value ?: emptyList()
+            }
+        }
+        dialog.show()
+        binding.genderGenderless.setOnClickListener {
+            viewModel.filterByGender(binding.genderGenderless.text.toString())
+            dialog.dismiss()
+            viewModel.filterCharacter.observe(viewLifecycleOwner) {
+                adapter.characters = viewModel.filterCharacter.value ?: emptyList()
+            }
+        }
+        dialog.show()
+        binding.genderUnknown.setOnClickListener {
+            viewModel.filterByGender(binding.genderUnknown.text.toString())
+            dialog.dismiss()
+            viewModel.filterCharacter.observe(viewLifecycleOwner) {
+                adapter.characters = viewModel.filterCharacter.value ?: emptyList()
+            }
+        }
+        binding.cancelFilter.setOnClickListener {
+            viewModel.loadAllCharacters()
+            dialog.dismiss()
+            viewModel.allCharacters.observe(viewLifecycleOwner) {
+                adapter.characters = viewModel.allCharacters.value ?: emptyList()
+            }
+        }
+        dialog.show()
     }
 
 

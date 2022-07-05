@@ -12,4 +12,10 @@ class FilterCharactersUseCase @Inject constructor(
     fun filterCharacterByName(characterName: String): Flow<Resource<List<SingleCharacter>>> {
         return charactersRepository.filterCharacterByName(characterName)
     }
+    fun filterCharacterByStatus(status: String): Flow<Resource<List<SingleCharacter>>> {
+        return charactersRepository.filterCharacterByStatus(status)
+    }
+    fun filterCharacterByGender(gender: String): Flow<Resource<List<SingleCharacter>>> {
+        return charactersRepository.filterCharacterByGender(gender)
+    }
 }
