@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.mytestprogram.rickmortyapplication.App
 import com.mytestprogram.rickmortyapplication.MainActivity
 import com.mytestprogram.rickmortyapplication.databinding.FragmentEpisodeDetailsBinding
+import com.mytestprogram.rickmortyapplication.presentation.character_details_screen.CharacterDetailsFragment
 import com.mytestprogram.rickmortyapplication.presentation.character_details_screen.CharacterDetailsViewModel
 import com.mytestprogram.rickmortyapplication.presentation.list_characters_screen.ListCharactersActionListener
 import com.mytestprogram.rickmortyapplication.utils.navigator
@@ -75,6 +76,16 @@ class EpisodeDetailsFragment: Fragment() {
                     Toast.makeText(context, "Check internet connection", Toast.LENGTH_LONG).show()
                 }
             }
+            binding.refreshEpisodesDetails.setOnRefreshListener {
+                viewModel.loadEpisodeById(requireArguments().getInt(ARG_EPISODE_ID))
+                viewModel.loadMultipleCharacters(characterIds)
+                viewModel.charactersList.observe(viewLifecycleOwner) {
+                    adapter.characters = viewModel.charactersList.value!!
+                }
+                binding.refreshEpisodesDetails.isRefreshing = false
+            }
+
+
         }
         return binding.root
     }

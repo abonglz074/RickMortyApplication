@@ -109,6 +109,14 @@ class ListCharactersFragment : Fragment() {
                 }
             }
 
+            binding.refreshListCharacters.setOnRefreshListener {
+                viewModel.loadAllCharacters()
+                viewModel.allCharacters.observe(viewLifecycleOwner) {
+                    adapter.characters = viewModel.allCharacters.value ?: emptyList()
+                }
+                binding.refreshListCharacters.isRefreshing = false
+            }
+
         }
         return binding.root
     }

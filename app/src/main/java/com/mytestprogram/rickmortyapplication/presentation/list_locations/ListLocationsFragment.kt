@@ -111,6 +111,14 @@ class ListLocationsFragment : Fragment() {
                 }
             }
 
+            binding.refreshListLocations.setOnRefreshListener {
+                viewModel.loadAllLocations()
+                viewModel.locationsList.observe(viewLifecycleOwner) {
+                    adapter.locations = viewModel.locationsList.value ?: emptyList()
+                }
+                binding.refreshListLocations.isRefreshing = false
+            }
+
         }
         return binding.root
     }

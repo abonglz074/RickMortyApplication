@@ -1,10 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:id="@+id/refresh_character_details">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/character_details_imageview"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@color/white">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?android:attr/actionBarSize"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:menu="@menu/search_menu"
+            app:title="Character Details" />
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <ImageView
         android:id="@+id/character_details_imageview"
@@ -12,53 +36,54 @@
         android:layout_height="300dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/appbar"
         tools:src="@drawable/ic_characters" />
+
 
     <TextView
         android:id="@+id/character_details_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/standard_margin_dimension"
-        android:textStyle="bold"
-        tools:text="Default Name"
         android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@id/character_details_gender"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/character_details_imageview" />
+        app:layout_constraintTop_toBottomOf="@id/character_details_imageview"
+        tools:text="Default Name" />
 
     <TextView
         android:id="@+id/character_details_gender"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/standard_margin_dimension"
-        tools:text="Gender"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@id/character_details_imageview"
         app:layout_constraintStart_toEndOf="@id/character_details_name"
-        app:layout_constraintTop_toBottomOf="@id/character_details_imageview" />
+        app:layout_constraintTop_toBottomOf="@id/character_details_imageview"
+        tools:text="Gender" />
 
     <TextView
         android:id="@+id/character_details_origin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/standard_margin_dimension"
-        tools:text="Origin"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@id/character_details_name"
         app:layout_constraintStart_toStartOf="@id/character_details_name"
-        app:layout_constraintTop_toBottomOf="@id/character_details_name" />
+        app:layout_constraintTop_toBottomOf="@id/character_details_name"
+        tools:text="Origin" />
 
     <TextView
         android:id="@+id/character_details_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/standard_margin_dimension"
-        tools:text="Location"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@id/character_details_gender"
         app:layout_constraintStart_toStartOf="@id/character_details_gender"
-        app:layout_constraintTop_toBottomOf="@id/character_details_name" />
+        app:layout_constraintTop_toBottomOf="@id/character_details_name"
+        tools:text="Location" />
 
 
     <TextView
@@ -66,11 +91,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/standard_margin_dimension"
-        tools:text="Species"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@id/character_details_name"
         app:layout_constraintStart_toStartOf="@id/character_details_name"
-        app:layout_constraintTop_toBottomOf="@id/character_details_origin" />
+        app:layout_constraintTop_toBottomOf="@id/character_details_origin"
+        tools:text="Species" />
 
     <TextView
         android:id="@+id/character_details_status"
@@ -78,21 +103,21 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/standard_margin_dimension"
         android:textSize="16sp"
-        tools:text="Status"
         app:layout_constraintEnd_toEndOf="@id/character_details_gender"
         app:layout_constraintStart_toStartOf="@id/character_details_gender"
-        app:layout_constraintTop_toBottomOf="@id/character_details_location" />
+        app:layout_constraintTop_toBottomOf="@id/character_details_location"
+        tools:text="Status" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/character_details_recyclerview_episodes"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:id="@+id/character_details_recyclerview_episodes"
         android:layout_marginTop="@dimen/standard_margin_dimension"
         android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/character_details_species"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         tools:listitem="@layout/character_details_recyclerview_episodes_item" />
 
     <ProgressBar
@@ -104,7 +129,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

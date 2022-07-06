@@ -56,6 +56,8 @@ class CharacterDetailsFragment : Fragment() {
         })
 
 
+
+
         binding.characterDetailsRecyclerviewEpisodes.layoutManager = LinearLayoutManager(context)
         binding.characterDetailsRecyclerviewEpisodes.adapter = adapter
 
@@ -99,6 +101,17 @@ class CharacterDetailsFragment : Fragment() {
                     Toast.makeText(context, "Check internet connection", Toast.LENGTH_LONG).show()
                 }
             }
+
+            binding.refreshCharacterDetails.setOnRefreshListener {
+                viewModel.loadCharacterById(requireArguments().getInt(ARG_CHARACTER_ID))
+                viewModel.loadMultipleEpisodes(episodeIds)
+                viewModel.episodesList.observe(viewLifecycleOwner) {
+                    adapter.episodes = viewModel.episodesList.value!!
+                }
+                binding.refreshCharacterDetails.isRefreshing = false
+            }
+
+
         }
 
         return binding.root

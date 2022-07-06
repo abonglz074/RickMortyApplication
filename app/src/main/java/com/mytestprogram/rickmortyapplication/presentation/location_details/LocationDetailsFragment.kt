@@ -79,6 +79,15 @@ class LocationDetailsFragment : Fragment() {
                     Toast.makeText(context, "Check internet connection", Toast.LENGTH_LONG).show()
                 }
             }
+
+            binding.refreshLocationDetails.setOnRefreshListener {
+                viewModel.loadLocationById(requireArguments().getInt(ARG_LOCATION_ID))
+                viewModel.loadMultipleCharacters(characterIds)
+                viewModel.charactersList.observe(viewLifecycleOwner) {
+                    adapter.characters = viewModel.charactersList.value!!
+                }
+                binding.refreshLocationDetails.isRefreshing = false
+            }
         }
 
 

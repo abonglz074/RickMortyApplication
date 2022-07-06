@@ -54,7 +54,7 @@ class CharacterDetailsViewModel @Inject constructor(
             loadMultipleEpisodesUseCase.loadMultipleEpisodes(episodeIds).collectLatest { result ->
                 when(result) {
                     is Resource.Success -> {
-                        _episodesList.postValue(result.data)
+                        _episodesList.postValue(result.data ?: emptyList())
                     }
                 }
             }

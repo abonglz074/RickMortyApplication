@@ -106,6 +106,14 @@ class ListEpisodesFragment : Fragment() {
                     }
                 }
             }
+            binding.refreshListEpisodes.setOnRefreshListener {
+                viewModel.loadAllEpisodes()
+                viewModel.episodesList.observe(viewLifecycleOwner) {
+                    adapter.episodes = viewModel.episodesList.value ?: emptyList()
+                }
+                binding.refreshListEpisodes.isRefreshing = false
+            }
+
         }
         return binding.root
     }

@@ -28,6 +28,11 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/refresh_list_episodes">
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list_episodes_recyclerview_item"
             android:layout_width="match_parent"
@@ -36,7 +41,7 @@
             app:spanCount="2"
             tools:listitem="@layout/character_details_recyclerview_episodes_item" />
 
-
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </LinearLayout>
 
     <ProgressBar
