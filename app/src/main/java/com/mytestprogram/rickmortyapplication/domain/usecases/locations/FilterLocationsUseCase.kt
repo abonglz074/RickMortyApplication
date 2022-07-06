@@ -12,4 +12,10 @@ class FilterLocationsUseCase @Inject constructor(
     fun filterLocationsByName(locationName: String): Flow<Resource<List<SingleLocation>>> {
         return charactersRepository.filterLocationByName(locationName)
     }
+    fun filterLocationsByType(locationType: String): Flow<Resource<List<SingleLocation>>> {
+        return charactersRepository.filterLocationByType(locationType)
+    }
+    fun filterLocationsByDimension(locationDimension: String): Flow<Resource<List<SingleLocation>>> {
+        return charactersRepository.filterLocationByDimension(locationDimension)
+    }
 }

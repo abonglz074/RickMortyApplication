@@ -74,4 +74,32 @@ class ListLocationsViewModel @Inject constructor(
             }
         }
     }
+    fun filterByType(locationType: String) {
+        viewModelScope.launch {
+            filterLocationsUseCase.filterLocationsByType(locationType).collectLatest { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        _filterLocations.postValue(result.data ?: emptyList())
+                        _isDataLoading.postValue(false)
+                        _isError.postValue(false)
+                    }
+
+                }
+            }
+        }
+    }
+    fun filterByDimension(locationDimension: String) {
+        viewModelScope.launch {
+            filterLocationsUseCase.filterLocationsByDimension(locationDimension).collectLatest { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        _filterLocations.postValue(result.data ?: emptyList())
+                        _isDataLoading.postValue(false)
+                        _isError.postValue(false)
+                    }
+
+                }
+            }
+        }
+    }
 }

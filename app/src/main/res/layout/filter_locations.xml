@@ -47,14 +47,6 @@
             android:layout_weight="1"
             android:text="@string/microverse" />
 
-        <Button
-            android:id="@+id/type_others"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="4dp"
-            android:layout_weight="1"
-            android:text="@string/others" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -93,14 +85,6 @@
             android:layout_weight="1"
             android:text="@string/unknown" />
 
-        <Button
-            android:id="@+id/dimension_others"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_margin="4dp"
-            android:layout_weight="1"
-            android:text="@string/others" />
 
         <Button
             android:id="@+id/all_locations"

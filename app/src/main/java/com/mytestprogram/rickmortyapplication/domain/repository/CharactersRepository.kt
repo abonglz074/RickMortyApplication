@@ -38,4 +38,8 @@ interface CharactersRepository {
     fun loadLocationById(locationId: Int): Flow<Resource<SingleLocation>>
 
     fun filterLocationByName(locationName: String): Flow<Resource<List<SingleLocation>>>
+
+    fun filterLocationByType(locationType: String): Flow<Resource<List<SingleLocation>>>
+
+    fun filterLocationByDimension(locationDimension: String): Flow<Resource<List<SingleLocation>>>
 }

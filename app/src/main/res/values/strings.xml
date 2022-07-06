@@ -29,8 +29,8 @@
     <string name="microverse">Microverse</string>
     <string name="others">Others</string>
     <string name="filter_by_dimension">Filter by Dimension</string>
-    <string name="replacement_dimension">Replacement Dimension</string>
-    <string name="dimension_c_137">Dimension C-137</string>
+    <string name="replacement_dimension">Replacement dimension</string>
+    <string name="dimension_c_137">Dimension c-137</string>
     <string name="unknown_dimension">Unknown</string>
     <string name="others_dimension">Others</string>
     <string name="all_locations">All Locations</string>

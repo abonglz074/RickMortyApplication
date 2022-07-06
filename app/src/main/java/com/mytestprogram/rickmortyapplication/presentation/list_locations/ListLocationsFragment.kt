@@ -10,9 +10,12 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mytestprogram.rickmortyapplication.App
 import com.mytestprogram.rickmortyapplication.MainActivity
 import com.mytestprogram.rickmortyapplication.R
+import com.mytestprogram.rickmortyapplication.databinding.FilterEpisodesBinding
+import com.mytestprogram.rickmortyapplication.databinding.FilterLocationsBinding
 import com.mytestprogram.rickmortyapplication.databinding.FragmentListEpisodesBinding
 import com.mytestprogram.rickmortyapplication.databinding.FragmentListLocationsBinding
 import com.mytestprogram.rickmortyapplication.presentation.list_episodes.ListEpisodesActionListener
@@ -96,7 +99,75 @@ class ListLocationsFragment : Fragment() {
                 }
             })
 
+            binding.toolbar.setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.filter_button -> {
+                        showFilterDialog(inflater)
+                        true
+                    }
+                    else -> {
+                        false
+                    }
+                }
+            }
+
         }
         return binding.root
+    }
+
+    private fun showFilterDialog(inflater: LayoutInflater) {
+        val binding = FilterLocationsBinding.inflate(inflater)
+        val dialog = BottomSheetDialog(requireContext())
+        dialog.setContentView(binding.root)
+        binding.typePlanet.setOnClickListener {
+            viewModel.filterByType(binding.typePlanet.text.toString())
+            dialog.dismiss()
+            viewModel.filterLocations.observe(viewLifecycleOwner) {
+                adapter.locations = viewModel.filterLocations.value ?: emptyList()
+            }
+        }
+        binding.typeSpaceStation.setOnClickListener {
+            viewModel.filterByType(binding.typeSpaceStation.text.toString())
+            dialog.dismiss()
+            viewModel.filterLocations.observe(viewLifecycleOwner) {
+                adapter.locations = viewModel.filterLocations.value ?: emptyList()
+            }
+        }
+        binding.typeMicroverse.setOnClickListener {
+            viewModel.filterByType(binding.typeMicroverse.text.toString())
+            dialog.dismiss()
+            viewModel.filterLocations.observe(viewLifecycleOwner) {
+                adapter.locations = viewModel.filterLocations.value ?: emptyList()
+            }
+        }
+        binding.replacementDimension.setOnClickListener {
+            viewModel.filterByDimension(binding.replacementDimension.text.toString())
+            dialog.dismiss()
+            viewModel.filterLocations.observe(viewLifecycleOwner) {
+                adapter.locations = viewModel.filterLocations.value ?: emptyList()
+            }
+        }
+        binding.dimensionC137.setOnClickListener {
+            viewModel.filterByDimension(binding.dimensionC137.text.toString())
+            dialog.dismiss()
+            viewModel.filterLocations.observe(viewLifecycleOwner) {
+                adapter.locations = viewModel.filterLocations.value ?: emptyList()
+            }
+        }
+        binding.dimensionUnknown.setOnClickListener {
+            viewModel.filterByDimension(binding.dimensionUnknown.text.toString())
+            dialog.dismiss()
+            viewModel.filterLocations.observe(viewLifecycleOwner) {
+                adapter.locations = viewModel.filterLocations.value ?: emptyList()
+            }
+        }
+        binding.allLocations.setOnClickListener {
+            viewModel.loadAllLocations()
+            dialog.dismiss()
+            viewModel.locationsList.observe(viewLifecycleOwner) {
+                adapter.locations = viewModel.locationsList.value ?: emptyList()
+            }
+        }
+        dialog.show()
     }
 }

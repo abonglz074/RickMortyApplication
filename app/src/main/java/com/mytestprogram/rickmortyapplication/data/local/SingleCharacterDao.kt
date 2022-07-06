@@ -89,6 +89,12 @@ interface SingleCharacterDao {
     @Query("SELECT * FROM locations WHERE name LIKE :name")
     suspend fun getLocationsByName(name: String): List<SingleLocationEntity>
 
+    @Query("SELECT * FROM locations WHERE type LIKE :type")
+    suspend fun getLocationsByType(type: String): List<SingleLocationEntity>
+
+    @Query("SELECT * FROM locations WHERE dimension LIKE :dimension")
+    suspend fun getLocationsByDimension(dimension: String): List<SingleLocationEntity>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllLocations(locations: List<SingleLocationEntity>)
 

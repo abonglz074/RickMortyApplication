@@ -63,4 +63,10 @@ interface CharacterRetrofitService {
     @GET("location")
     suspend fun filterLocations(@Query("name") locationName: String): AllLocationsDto
 
+    @GET("location")
+    suspend fun filterLocationsByType(@Query("type") locationType: String): AllLocationsDto
+
+    @GET("location")
+    suspend fun filterLocationsByDimension(@Query("dimension") locationDimension: String): AllLocationsDto
+
 }

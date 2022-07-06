@@ -456,4 +456,68 @@ class CharactersRepositoryImpl @Inject constructor(
                 .map { it.toSingleLocation() }
             emit(Resource.Success(newData))
         }
+
+    override fun filterLocationByType(locationType: String): Flow<Resource<List<SingleLocation>>> =
+        flow {
+            emit(Resource.Loading())
+            val dataFromDb =
+                singleCharacterDao.getLocationsByType(locationType).map { it.toSingleLocation() }
+            emit(Resource.Loading(dataFromDb))
+            try {
+                val remoteCharacters =
+                    characterRetrofitService.filterLocationsByType(locationType).results
+                        .map { it.toSingleLocationEntity() }
+                singleCharacterDao.insertAllLocations(remoteCharacters)
+            } catch (e: HttpException) {
+                emit(
+                    Resource.Error(
+                        message = "Oops, something went wrong!",
+                        data = emptyList()
+                    )
+                )
+            } catch (e: IOException) {
+                emit(
+                    Resource.Error(
+                        message = "Check internet connection!",
+                        data = emptyList()
+                    )
+                )
+            }
+
+            val newData = singleCharacterDao.getLocationsByType(locationType)
+                .map { it.toSingleLocation() }
+            emit(Resource.Success(newData))
+        }
+
+    override fun filterLocationByDimension(locationDimension: String): Flow<Resource<List<SingleLocation>>>  =
+        flow {
+            emit(Resource.Loading())
+            val dataFromDb =
+                singleCharacterDao.getLocationsByDimension(locationDimension).map { it.toSingleLocation() }
+            emit(Resource.Loading(dataFromDb))
+            try {
+                val remoteCharacters =
+                    characterRetrofitService.filterLocationsByDimension(locationDimension).results
+                        .map { it.toSingleLocationEntity() }
+                singleCharacterDao.insertAllLocations(remoteCharacters)
+            } catch (e: HttpException) {
+                emit(
+                    Resource.Error(
+                        message = "Oops, something went wrong!",
+                        data = emptyList()
+                    )
+                )
+            } catch (e: IOException) {
+                emit(
+                    Resource.Error(
+                        message = "Check internet connection!",
+                        data = emptyList()
+                    )
+                )
+            }
+
+            val newData = singleCharacterDao.getLocationsByDimension(locationDimension)
+                .map { it.toSingleLocation() }
+            emit(Resource.Success(newData))
+        }
 }
