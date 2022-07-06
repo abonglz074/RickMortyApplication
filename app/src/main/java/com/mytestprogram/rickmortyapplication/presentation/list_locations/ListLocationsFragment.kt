@@ -4,12 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AbsListView
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mytestprogram.rickmortyapplication.App
 import com.mytestprogram.rickmortyapplication.MainActivity
@@ -50,6 +52,31 @@ class ListLocationsFragment : Fragment() {
                 navigator().showLocationDetails(locationId)
             }
         })
+
+        var isScrolling = false
+        binding.listLocationsRecyclerview.addOnScrollListener(object :
+            RecyclerView.OnScrollListener() {
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val visibleItemCount = recyclerView.layoutManager!!.childCount
+                val totalVisibleItems = recyclerView.layoutManager!!.itemCount
+                val pastVisibleItem = (recyclerView.layoutManager as GridLayoutManager).findFirstCompletelyVisibleItemPosition()
+
+                if (isScrolling && visibleItemCount + pastVisibleItem >= totalVisibleItems) {
+                    isScrolling = false
+                    viewModel.loadAllLocations()
+                }
+
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    isScrolling = true
+                }
+            }
+        })
+
         binding.listLocationsRecyclerview.layoutManager = GridLayoutManager(context, 2)
         binding.listLocationsRecyclerview.adapter = adapter
 
@@ -61,7 +88,7 @@ class ListLocationsFragment : Fragment() {
 
             viewModel.isError.observe(viewLifecycleOwner) {
                 if (it == true) {
-                    Toast.makeText(context, "Check internet connection", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Check your internet connection!", Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -71,16 +98,6 @@ class ListLocationsFragment : Fragment() {
             searchView.maxWidth = Integer.MAX_VALUE
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
-                    if (!query.isNullOrBlank()) {
-                        viewModel.onSearch(query)
-                        viewModel.filterLocations.observe(viewLifecycleOwner) {
-                            adapter.locations = viewModel.filterLocations.value ?: emptyList()
-                        }
-                    } else {
-                        viewModel.loadAllLocations()
-                        adapter.locations = viewModel.locationsList.value ?: emptyList()
-                    }
-
                     return true
                 }
 
@@ -89,10 +106,12 @@ class ListLocationsFragment : Fragment() {
                         viewModel.onSearch(query)
                         viewModel.filterLocations.observe(viewLifecycleOwner) {
                             adapter.locations = viewModel.filterLocations.value ?: emptyList()
+                            binding.noData.isVisible = adapter.locations.isEmpty()
                         }
                     } else {
                         viewModel.loadAllLocations()
                         adapter.locations = viewModel.locationsList.value ?: emptyList()
+                        binding.noData.isVisible = false
                     }
 
                     return true

@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mytestprogram.rickmortyapplication.App
 import com.mytestprogram.rickmortyapplication.MainActivity
@@ -49,7 +50,30 @@ class ListCharactersFragment : Fragment() {
         binding.charactersListRecyclerview.adapter = adapter
 
 
-        viewModel.loadAllCharacters()
+        var isScrolling = false
+        binding.charactersListRecyclerview.addOnScrollListener(object :
+            RecyclerView.OnScrollListener() {
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val visibleItemCount = recyclerView.layoutManager!!.childCount
+                val totalVisibleItems = recyclerView.layoutManager!!.itemCount
+                val pastVisibleItem = (recyclerView.layoutManager as GridLayoutManager).findFirstCompletelyVisibleItemPosition()
+
+                if (isScrolling && visibleItemCount + pastVisibleItem >= totalVisibleItems) {
+                    isScrolling = false
+                    viewModel.loadAllCharacters()
+                }
+
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    isScrolling = true
+                }
+            }
+        })
+
 
         viewModel.allCharacters.observe(viewLifecycleOwner) {
             adapter.characters = viewModel.allCharacters.value ?: emptyList()
@@ -60,7 +84,7 @@ class ListCharactersFragment : Fragment() {
 
             viewModel.isError.observe(viewLifecycleOwner) {
                 if (it == true) {
-                    Toast.makeText(context, "Check internet connection", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Check your internet connection", Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -69,16 +93,6 @@ class ListCharactersFragment : Fragment() {
             searchView.maxWidth = Integer.MAX_VALUE
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
-                    if (!query.isNullOrBlank()) {
-                        viewModel.onSearch(query)
-                        viewModel.filterCharacter.observe(viewLifecycleOwner) {
-                            adapter.characters = viewModel.filterCharacter.value ?: emptyList()
-                        }
-                    } else {
-                        viewModel.loadAllCharacters()
-                        adapter.characters = viewModel.allCharacters.value ?: emptyList()
-                    }
-
                     return true
                 }
 
@@ -87,10 +101,12 @@ class ListCharactersFragment : Fragment() {
                         viewModel.onSearch(query)
                         viewModel.filterCharacter.observe(viewLifecycleOwner) {
                             adapter.characters = viewModel.filterCharacter.value ?: emptyList()
+                            binding.noData.isVisible = adapter.characters.isEmpty()
                         }
                     } else {
-                        viewModel.loadAllCharacters()
+//                        viewModel.loadAllCharacters()
                         adapter.characters = viewModel.allCharacters.value ?: emptyList()
+                        binding.noData.isVisible = false
                     }
 
                     return true
@@ -109,8 +125,8 @@ class ListCharactersFragment : Fragment() {
                 }
             }
 
+
             binding.refreshListCharacters.setOnRefreshListener {
-                viewModel.loadAllCharacters()
                 viewModel.allCharacters.observe(viewLifecycleOwner) {
                     adapter.characters = viewModel.allCharacters.value ?: emptyList()
                 }
@@ -176,7 +192,7 @@ class ListCharactersFragment : Fragment() {
             }
         }
         binding.cancelFilter.setOnClickListener {
-            viewModel.loadAllCharacters()
+//            viewModel.loadAllCharacters()
             dialog.dismiss()
             viewModel.allCharacters.observe(viewLifecycleOwner) {
                 adapter.characters = viewModel.allCharacters.value ?: emptyList()

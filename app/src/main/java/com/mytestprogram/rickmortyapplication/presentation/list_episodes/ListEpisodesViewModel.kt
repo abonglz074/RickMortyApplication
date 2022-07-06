@@ -21,6 +21,8 @@ class ListEpisodesViewModel @Inject constructor(
     private val loadMultipleEpisodesUseCase: LoadMultipleEpisodesUseCase
 ): ViewModel() {
 
+    var page = 1
+
     private val _episodesList = MutableLiveData<List<SingleEpisode>?>()
     val episodesList: LiveData<List<SingleEpisode>?> = _episodesList
 
@@ -33,31 +35,31 @@ class ListEpisodesViewModel @Inject constructor(
     private val _isError = MutableLiveData<Boolean>()
     val isError: LiveData<Boolean> = _isError
 
+    private val _noData = MutableLiveData<Boolean>()
+    val noData: LiveData<Boolean> = _noData
+
     init {
         loadAllEpisodes()
     }
 
     fun loadAllEpisodes() {
         viewModelScope.launch {
-            loadAllEpisodesUseCase.loadAllEpisodes().collectLatest { result ->
+            loadAllEpisodesUseCase.loadAllEpisodes(page).collectLatest { result ->
                 when (result) {
                     is Resource.Success -> {
                         _episodesList.postValue(result.data)
+                        page++
                         _isDataLoading.value = false
-                        _isError.postValue(false)
                     }
                     is Resource.Error -> {
-                        _episodesList.postValue(result.data)
-                        if (result.data.isNullOrEmpty()) {
-                            _isError.postValue(true)
+                        if (!result.data.isNullOrEmpty()) {
+                            _isError.value = true
                         }
-                        _isDataLoading.postValue(false)
+                        _isDataLoading.value = false
                     }
                     is Resource.Loading -> {
-                        if (result.data.isNullOrEmpty()) {
-                            _isDataLoading.value = false
-                        }
-                        _isError.postValue(false)
+                        _isDataLoading.value = true
+                        _isError.value = false
                     }
                 }
             }
@@ -73,6 +75,19 @@ class ListEpisodesViewModel @Inject constructor(
                         _isDataLoading.postValue(false)
                         _isError.postValue(false)
                     }
+                    is Resource.Error -> {
+                        if (!result.data.isNullOrEmpty()) {
+                            _isError.value = true
+                        }
+                        if (result.data == null) {
+                            _noData.value = true
+                        }
+                        _isDataLoading.value = false
+                    }
+                    is Resource.Loading -> {
+                        _isDataLoading.value = true
+                        _isError.value = false
+                    }
 
                 }
             }
@@ -86,6 +101,16 @@ class ListEpisodesViewModel @Inject constructor(
                         _filterEpisodes.postValue(result.data ?: emptyList())
                         _isDataLoading.postValue(false)
                         _isError.postValue(false)
+                    }
+                    is Resource.Error -> {
+                        _filterEpisodes.postValue(result.data ?: emptyList())
+                        _isError.value = true
+                        _isDataLoading.value = false
+                    }
+                    is Resource.Loading -> {
+                        _filterEpisodes.postValue(result.data ?: emptyList())
+                        _isDataLoading.value = true
+                        _isError.value = false
                     }
                 }
             }

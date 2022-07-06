@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface CharactersRepository {
 
-    fun loadAllCharacters(): Flow<Resource<List<SingleCharacter>>>
+    fun loadAllCharacters(page: Int): Flow<Resource<List<SingleCharacter>>>
 
     fun loadCharacterById(characterId: Int): Flow<Resource<SingleCharacter>>
 
@@ -25,7 +25,7 @@ interface CharactersRepository {
 
     fun loadMultipleCharacters(characterIds: List<Int>): Flow<Resource<List<SingleCharacter>>>
 
-    fun loadAllEpisodes(): Flow<Resource<List<SingleEpisode>>>
+    fun loadAllEpisodes(page: Int): Flow<Resource<List<SingleEpisode>>>
 
     fun loadEpisodesById(episodeId: Int): Flow<Resource<SingleEpisode>>
 
@@ -33,7 +33,7 @@ interface CharactersRepository {
 
     fun loadMultipleEpisodes(episodeIds: List<Int>): Flow<Resource<List<SingleEpisode>>>
 
-    fun loadAllLocations(): Flow<Resource<List<SingleLocation>>>
+    fun loadAllLocations(page: Int): Flow<Resource<List<SingleLocation>>>
 
     fun loadLocationById(locationId: Int): Flow<Resource<SingleLocation>>
 

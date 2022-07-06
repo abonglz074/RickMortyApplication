@@ -18,6 +18,8 @@ class ListLocationsViewModel @Inject constructor(
     private val filterLocationsUseCase: FilterLocationsUseCase
 ): ViewModel() {
 
+    var page = 1
+
     private val _locationsList = MutableLiveData<List<SingleLocation>?>()
     val locationsList: LiveData<List<SingleLocation>?> = _locationsList
 
@@ -36,25 +38,23 @@ class ListLocationsViewModel @Inject constructor(
 
     fun loadAllLocations() {
         viewModelScope.launch {
-            loadAllLocationsUseCase.loadAllLocations().collectLatest { result ->
+            loadAllLocationsUseCase.loadAllLocations(page).collectLatest { result ->
                 when (result) {
                     is Resource.Success -> {
                         _locationsList.postValue(result.data)
+                        page++
                         _isDataLoading.value = false
-                        _isError.postValue(false)
+                        _isError.value = false
                     }
                     is Resource.Error -> {
-                        _locationsList.postValue(result.data)
-                        if (result.data.isNullOrEmpty()) {
-                            _isError.postValue(true)
+                        if (!result.data.isNullOrEmpty()) {
+                            _isError.value = true
                         }
                         _isDataLoading.postValue(false)
                     }
                     is Resource.Loading -> {
-                        if (result.data.isNullOrEmpty()) {
-                            _isDataLoading.value = false
-                        }
-                        _isError.postValue(false)
+                        _isDataLoading.value = true
+                        _isError.value = false
                     }
                 }
             }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AbsListView
 import android.widget.Toast
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.isVisible
@@ -11,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mytestprogram.rickmortyapplication.App
 import com.mytestprogram.rickmortyapplication.MainActivity
@@ -47,6 +49,31 @@ class ListEpisodesFragment : Fragment() {
                 navigator().showEpisodeDetails(episodeId)
             }
         })
+
+        var isScrolling = false
+        binding.listEpisodesRecyclerviewItem.addOnScrollListener(object :
+            RecyclerView.OnScrollListener() {
+
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                val visibleItemCount = recyclerView.layoutManager!!.childCount
+                val totalVisibleItems = recyclerView.layoutManager!!.itemCount
+                val pastVisibleItem = (recyclerView.layoutManager as GridLayoutManager).findFirstCompletelyVisibleItemPosition()
+
+                if (isScrolling && visibleItemCount + pastVisibleItem >= totalVisibleItems) {
+                    isScrolling = false
+                    viewModel.loadAllEpisodes()
+                }
+
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+                if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+                    isScrolling = true
+                }
+            }
+        })
+
         binding.listEpisodesRecyclerviewItem.layoutManager = GridLayoutManager(context, 2)
         binding.listEpisodesRecyclerviewItem.adapter = adapter
 
@@ -58,7 +85,7 @@ class ListEpisodesFragment : Fragment() {
 
             viewModel.isError.observe(viewLifecycleOwner) {
                 if (it == true) {
-                    Toast.makeText(context, "Check internet connection", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Check your internet connection!", Toast.LENGTH_SHORT).show()
                 }
             }
 
@@ -67,16 +94,6 @@ class ListEpisodesFragment : Fragment() {
             searchView.maxWidth = Integer.MAX_VALUE
             searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
                 override fun onQueryTextSubmit(query: String?): Boolean {
-                    if (!query.isNullOrBlank()) {
-                        viewModel.onSearch(query)
-                        viewModel.filterEpisodes.observe(viewLifecycleOwner) {
-                            adapter.episodes = viewModel.filterEpisodes.value ?: emptyList()
-                        }
-                    } else {
-                        viewModel.loadAllEpisodes()
-                        adapter.episodes = viewModel.episodesList.value ?: emptyList()
-                    }
-
                     return true
                 }
 
@@ -85,10 +102,14 @@ class ListEpisodesFragment : Fragment() {
                         viewModel.onSearch(query)
                         viewModel.filterEpisodes.observe(viewLifecycleOwner) {
                             adapter.episodes = viewModel.filterEpisodes.value ?: emptyList()
+                            binding.noData.isVisible = adapter.episodes.isEmpty()
                         }
                     } else {
                         viewModel.loadAllEpisodes()
                         adapter.episodes = viewModel.episodesList.value ?: emptyList()
+                        binding.noData.isVisible = false
+
+
                     }
 
                     return true
@@ -110,6 +131,7 @@ class ListEpisodesFragment : Fragment() {
                 viewModel.loadAllEpisodes()
                 viewModel.episodesList.observe(viewLifecycleOwner) {
                     adapter.episodes = viewModel.episodesList.value ?: emptyList()
+
                 }
                 binding.refreshListEpisodes.isRefreshing = false
             }
@@ -128,6 +150,7 @@ class ListEpisodesFragment : Fragment() {
             dialog.dismiss()
             viewModel.filterEpisodes.observe(viewLifecycleOwner) {
                 adapter.episodes = viewModel.filterEpisodes.value ?: emptyList()
+
             }
         }
         binding.season2.setOnClickListener {

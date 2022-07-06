@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.mytestprogram.rickmortyapplication.App
 import com.mytestprogram.rickmortyapplication.MainActivity
+import com.mytestprogram.rickmortyapplication.R
 import com.mytestprogram.rickmortyapplication.databinding.FragmentCharacterDetailsBinding
 import com.mytestprogram.rickmortyapplication.presentation.list_characters_screen.ListCharactersViewModel
 import com.mytestprogram.rickmortyapplication.presentation.list_episodes.ListEpisodesActionListener
@@ -29,11 +30,6 @@ class CharacterDetailsFragment : Fragment() {
     private lateinit var binding: FragmentCharacterDetailsBinding
     private lateinit var viewModel: CharacterDetailsViewModel
     private lateinit var adapter: CharacterDetailsAdapter
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,8 +51,12 @@ class CharacterDetailsFragment : Fragment() {
             }
         })
 
-
-
+        with(binding.toolbar) {
+            setNavigationIcon(R.drawable.ic_back)
+            setNavigationOnClickListener {
+                navigator().showCharactersList()
+            }
+        }
 
         binding.characterDetailsRecyclerviewEpisodes.layoutManager = LinearLayoutManager(context)
         binding.characterDetailsRecyclerviewEpisodes.adapter = adapter
@@ -110,13 +110,9 @@ class CharacterDetailsFragment : Fragment() {
                 }
                 binding.refreshCharacterDetails.isRefreshing = false
             }
-
-
         }
-
         return binding.root
     }
-
 
     companion object {
 

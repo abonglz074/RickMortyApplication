@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.mytestprogram.rickmortyapplication.App
 import com.mytestprogram.rickmortyapplication.MainActivity
+import com.mytestprogram.rickmortyapplication.R
 import com.mytestprogram.rickmortyapplication.databinding.FragmentEpisodeDetailsBinding
 import com.mytestprogram.rickmortyapplication.databinding.FragmentLocationDetailsBinding
 import com.mytestprogram.rickmortyapplication.presentation.episode_details.EpisodeDetailsAdapter
@@ -51,6 +52,13 @@ class LocationDetailsFragment : Fragment() {
                 navigator().showCharacterDetails(characterId)
             }
         })
+
+        with(binding.toolbar) {
+            setNavigationIcon(R.drawable.ic_back)
+            setNavigationOnClickListener {
+                navigator().showLocationsList()
+            }
+        }
 
         binding.locationDetailsCharactersRecyclerview.layoutManager = GridLayoutManager(context, 2)
         binding.locationDetailsCharactersRecyclerview.adapter = adapter

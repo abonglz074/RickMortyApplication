@@ -11,7 +11,7 @@ class LoadAllCharactersUseCase @Inject constructor(
     private val charactersRepository: CharactersRepository
 ) {
 
-    fun loadAllCharacters(): Flow<Resource<List<SingleCharacter>>> {
-        return charactersRepository.loadAllCharacters()
+    fun loadAllCharacters(page: Int): Flow<Resource<List<SingleCharacter>>> {
+        return charactersRepository.loadAllCharacters(page)
     }
 }

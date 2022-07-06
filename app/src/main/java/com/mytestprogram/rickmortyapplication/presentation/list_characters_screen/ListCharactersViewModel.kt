@@ -14,6 +14,8 @@ class ListCharactersViewModel @Inject constructor(
     private val filterCharactersUseCase: FilterCharactersUseCase
 ) : ViewModel() {
 
+    var page = 1
+
     private val _allCharacters = MutableLiveData<List<SingleCharacter>?>()
     val allCharacters: LiveData<List<SingleCharacter>?> = _allCharacters
 
@@ -26,12 +28,17 @@ class ListCharactersViewModel @Inject constructor(
     private val _isError = MutableLiveData<Boolean>()
     val isError: LiveData<Boolean> = _isError
 
+    init {
+        loadAllCharacters()
+    }
+
     fun loadAllCharacters() {
         viewModelScope.launch {
-            loadAllCharactersUseCase.loadAllCharacters().collectLatest { result ->
+            loadAllCharactersUseCase.loadAllCharacters(page).collectLatest { result ->
                 when (result) {
                     is Resource.Success -> {
                         _allCharacters.postValue(result.data)
+                        page++
                         _isDataLoading.value = false
                         _isError.postValue(false)
                     }
@@ -43,9 +50,7 @@ class ListCharactersViewModel @Inject constructor(
                         _isDataLoading.postValue(false)
                     }
                     is Resource.Loading -> {
-                        if (result.data.isNullOrEmpty()) {
-                            _isDataLoading.value = false
-                        }
+                        _isDataLoading.value = true
                         _isError.postValue(false)
                     }
                 }

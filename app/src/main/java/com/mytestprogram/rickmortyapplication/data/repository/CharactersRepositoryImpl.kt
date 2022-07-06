@@ -20,13 +20,13 @@ class CharactersRepositoryImpl @Inject constructor(
 
     private val singleCharacterDao = db.getDatabase()
 
-    override fun loadAllCharacters(): Flow<Resource<List<SingleCharacter>>> = flow {
+    override fun loadAllCharacters(page: Int): Flow<Resource<List<SingleCharacter>>> = flow {
         emit(Resource.Loading())
         val dataFromDb = singleCharacterDao.getAllCharacters().map { it.toSingleCharacter() }
         emit(Resource.Loading(dataFromDb))
         try {
-            val remoteCharacters = characterRetrofitService.loadAllCharacters()
-            singleCharacterDao.deleteAllCharacters()
+            val remoteCharacters = characterRetrofitService.loadAllCharacters(page)
+//            singleCharacterDao.deleteAllCharacters()
             singleCharacterDao.insertAllCharacters(remoteCharacters.results.map { it.toSingleCharacterEntity() })
         } catch (e: Exception) {
             emit(
@@ -228,25 +228,17 @@ class CharactersRepositoryImpl @Inject constructor(
 
     }
 
-    override fun loadAllEpisodes(): Flow<Resource<List<SingleEpisode>>> = flow {
+    override fun loadAllEpisodes(page: Int): Flow<Resource<List<SingleEpisode>>> = flow {
         emit(Resource.Loading())
         val dataFromDb = singleCharacterDao.getAllEpisodes().map { it.toSingleEpisode() }
         emit(Resource.Loading(dataFromDb))
         try {
-            val remoteEpisodes = characterRetrofitService.loadAllEpisodes()
-            singleCharacterDao.deleteAllEpisodes()
+            val remoteEpisodes = characterRetrofitService.loadAllEpisodes(page)
             singleCharacterDao.insertAllEpisodes(remoteEpisodes.results.map { it.toSingleEpisodeEntity() })
         } catch (e: Exception) {
             emit(
                 Resource.Error(
                     message = "Oops, something went wrong! Try again",
-                    data = dataFromDb
-                )
-            )
-        } catch (e: IOException) {
-            emit(
-                Resource.Error(
-                    message = "Check internet connection!",
                     data = dataFromDb
                 )
             )
@@ -289,6 +281,7 @@ class CharactersRepositoryImpl @Inject constructor(
             emit(Resource.Loading(dataFromDb))
             try {
                 val remoteEpisodes = characterRetrofitService.loadMultipleEpisodesById(episodeIds)
+                singleCharacterDao.deleteAllEpisodes()
                 singleCharacterDao.insertAllEpisodes(remoteEpisodes.map { it.toSingleEpisodeEntity() })
             } catch (e: HttpException) {
                 emit(
@@ -341,44 +334,12 @@ class CharactersRepositoryImpl @Inject constructor(
             emit(Resource.Success(newData))
         }
 
-//    override fun filterEpisodeBySeason(episode: List<String>): Flow<Resource<List<SingleEpisode>>> =
-//        flow {
-//            emit(Resource.Loading())
-//            val dataFromDb =
-//                singleCharacterDao.getEpisodeBySeason(episode).map { it.toSingleEpisode() }
-//            emit(Resource.Loading(dataFromDb))
-//            try {
-//                val remoteCharacters = characterRetrofitService.filterEpisodesBySeason(episode).results
-//                    .map { it.toSingleEpisodeEntity() }
-//                singleCharacterDao.insertAllEpisodes(remoteCharacters)
-//            } catch (e: HttpException) {
-//                emit(
-//                    Resource.Error(
-//                        message = "Oops, something went wrong!",
-//                        data = emptyList()
-//                    )
-//                )
-//            } catch (e: IOException) {
-//                emit(
-//                    Resource.Error(
-//                        message = "Check internet connection!",
-//                        data = emptyList()
-//                    )
-//                )
-//            }
-//
-//            val newData = singleCharacterDao.getEpisodeBySeason(episode)
-//                .map { it.toSingleEpisode() }
-//            emit(Resource.Success(newData))
-//        }
-
-    override fun loadAllLocations(): Flow<Resource<List<SingleLocation>>> = flow {
+    override fun loadAllLocations(page: Int): Flow<Resource<List<SingleLocation>>> = flow {
         emit(Resource.Loading())
         val dataFromDb = singleCharacterDao.getAllLocations().map { it.toSingleLocation() }
         emit(Resource.Loading(dataFromDb))
         try {
-            val remoteLocations = characterRetrofitService.loadAllLocations()
-            singleCharacterDao.deleteAllLocations()
+            val remoteLocations = characterRetrofitService.loadAllLocations(page)
             singleCharacterDao.insertAllLocations(remoteLocations.results.map { it.toSingleLocationEntity() })
         } catch (e: Exception) {
             emit(

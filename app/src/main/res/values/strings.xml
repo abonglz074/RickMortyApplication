@@ -41,5 +41,6 @@
     <string name="season_4">Season 4</string>
     <string name="season_5">Season 5</string>
     <string name="all_episodes">All episodes</string>
+    <string name="no_data">No data</string>
 
 </resources>

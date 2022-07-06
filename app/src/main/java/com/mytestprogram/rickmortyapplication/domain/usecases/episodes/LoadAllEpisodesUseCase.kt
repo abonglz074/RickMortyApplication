@@ -13,7 +13,7 @@ class LoadAllEpisodesUseCase @Inject constructor(
     private val charactersRepository: CharactersRepository
 ) {
 
-    fun loadAllEpisodes(): Flow<Resource<List<SingleEpisode>>> {
-        return charactersRepository.loadAllEpisodes()
+    fun loadAllEpisodes(page: Int): Flow<Resource<List<SingleEpisode>>> {
+        return charactersRepository.loadAllEpisodes(page)
     }
 }
