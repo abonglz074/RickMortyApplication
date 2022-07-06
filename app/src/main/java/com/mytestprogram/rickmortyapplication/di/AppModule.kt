@@ -98,9 +98,14 @@ class AppModule(val context: Context) {
     @Provides
     fun provideListEpisodesViewModelFactory(
         loadAllEpisodesUseCase: LoadAllEpisodesUseCase,
-        filterEpisodesUseCase: FilterEpisodesUseCase
+        filterEpisodesUseCase: FilterEpisodesUseCase,
+        loadMultipleEpisodesUseCase: LoadMultipleEpisodesUseCase
     ): ListEpisodesViewModelFactory {
-        return ListEpisodesViewModelFactory(loadAllEpisodesUseCase, filterEpisodesUseCase)
+        return ListEpisodesViewModelFactory(
+            loadAllEpisodesUseCase,
+            filterEpisodesUseCase,
+            loadMultipleEpisodesUseCase
+        )
     }
 
     @Provides

@@ -18,4 +18,7 @@ class FilterCharactersUseCase @Inject constructor(
     fun filterCharacterByGender(gender: String): Flow<Resource<List<SingleCharacter>>> {
         return charactersRepository.filterCharacterByGender(gender)
     }
+    fun filterCharacterBySpecies(species: String): Flow<Resource<List<SingleCharacter>>> {
+        return charactersRepository.filterCharacterBySpecies(species)
+    }
 }

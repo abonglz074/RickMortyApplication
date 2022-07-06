@@ -29,6 +29,9 @@ interface SingleCharacterDao {
     @Query("SELECT * FROM characters WHERE gender LIKE :gender")
     suspend fun getCharacterByGender(gender: String): List<SingleCharacterEntity>
 
+    @Query("SELECT * FROM characters WHERE species LIKE :species")
+    suspend fun getCharacterBySpecies(species: String): List<SingleCharacterEntity>
+
     @Query("SELECT * FROM characters WHERE id IN (:id)")
     suspend fun getMultipleCharactersById(id: List<Int>): List<SingleCharacterEntity>
 
@@ -59,6 +62,8 @@ interface SingleCharacterDao {
     @Query("SELECT * FROM episodes WHERE name LIKE :name")
     suspend fun getEpisodeByName(name: String): List<SingleEpisodeEntity>
 
+    @Query("SELECT * FROM episodes WHERE episode IN (:episodes)")
+    suspend fun getEpisodeBySeason(episodes: List<String>): List<SingleEpisodeEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAllEpisodes(episodes: List<SingleEpisodeEntity>)

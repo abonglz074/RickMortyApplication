@@ -97,6 +97,21 @@ class ListCharactersViewModel @Inject constructor(
             }
         }
     }
+
+    fun filterBySpecies(species: String) {
+        viewModelScope.launch {
+            filterCharactersUseCase.filterCharacterBySpecies(species).collectLatest { result ->
+                when (result) {
+                    is Resource.Success -> {
+                        _filterCharacter.postValue(result.data ?: emptyList())
+                        _isDataLoading.postValue(false)
+                        _isError.postValue(false)
+                    }
+
+                }
+            }
+        }
+    }
 }
 
 

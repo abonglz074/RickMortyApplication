@@ -146,7 +146,6 @@ class ListCharactersFragment : Fragment() {
                 adapter.characters = viewModel.filterCharacter.value ?: emptyList()
             }
         }
-        dialog.show()
         binding.genderFemale.setOnClickListener {
             viewModel.filterByGender(binding.genderFemale.text.toString())
             dialog.dismiss()
@@ -154,7 +153,6 @@ class ListCharactersFragment : Fragment() {
                 adapter.characters = viewModel.filterCharacter.value ?: emptyList()
             }
         }
-        dialog.show()
         binding.genderGenderless.setOnClickListener {
             viewModel.filterByGender(binding.genderGenderless.text.toString())
             dialog.dismiss()
@@ -162,7 +160,6 @@ class ListCharactersFragment : Fragment() {
                 adapter.characters = viewModel.filterCharacter.value ?: emptyList()
             }
         }
-        dialog.show()
         binding.genderUnknown.setOnClickListener {
             viewModel.filterByGender(binding.genderUnknown.text.toString())
             dialog.dismiss()
@@ -175,6 +172,62 @@ class ListCharactersFragment : Fragment() {
             dialog.dismiss()
             viewModel.allCharacters.observe(viewLifecycleOwner) {
                 adapter.characters = viewModel.allCharacters.value ?: emptyList()
+            }
+        }
+        binding.speciesHuman.setOnClickListener {
+            viewModel.filterBySpecies(binding.speciesHuman.text.toString())
+            dialog.dismiss()
+            viewModel.filterCharacter.observe(viewLifecycleOwner) {
+                adapter.characters = viewModel.filterCharacter.value ?: emptyList()
+            }
+        }
+        binding.speciesAlien.setOnClickListener {
+            viewModel.filterBySpecies(binding.speciesAlien.text.toString())
+            dialog.dismiss()
+            viewModel.filterCharacter.observe(viewLifecycleOwner) {
+                adapter.characters = viewModel.filterCharacter.value ?: emptyList()
+            }
+        }
+        binding.speciesHumanoid.setOnClickListener {
+            viewModel.filterBySpecies(binding.speciesHumanoid.text.toString())
+            dialog.dismiss()
+            viewModel.filterCharacter.observe(viewLifecycleOwner) {
+                adapter.characters = viewModel.filterCharacter.value ?: emptyList()
+            }
+        }
+        binding.speciesAnimal.setOnClickListener {
+            viewModel.filterBySpecies(binding.speciesAnimal.text.toString())
+            dialog.dismiss()
+            viewModel.filterCharacter.observe(viewLifecycleOwner) {
+                adapter.characters = viewModel.filterCharacter.value ?: emptyList()
+            }
+        }
+        binding.speciesRobot.setOnClickListener {
+            viewModel.filterBySpecies(binding.speciesRobot.text.toString())
+            dialog.dismiss()
+            viewModel.filterCharacter.observe(viewLifecycleOwner) {
+                adapter.characters = viewModel.filterCharacter.value ?: emptyList()
+            }
+        }
+        binding.speciesPoopy.setOnClickListener {
+            viewModel.filterBySpecies("Poopybutthole")
+            dialog.dismiss()
+            viewModel.filterCharacter.observe(viewLifecycleOwner) {
+                adapter.characters = viewModel.filterCharacter.value ?: emptyList()
+            }
+        }
+        binding.speciesCronenberg.setOnClickListener {
+            viewModel.filterBySpecies(binding.speciesCronenberg.text.toString())
+            dialog.dismiss()
+            viewModel.filterCharacter.observe(viewLifecycleOwner) {
+                adapter.characters = viewModel.filterCharacter.value ?: emptyList()
+            }
+        }
+        binding.speciesMythological.setOnClickListener {
+            viewModel.filterBySpecies("Mythological Creature")
+            dialog.dismiss()
+            viewModel.filterCharacter.observe(viewLifecycleOwner) {
+                adapter.characters = viewModel.filterCharacter.value ?: emptyList()
             }
         }
         dialog.show()

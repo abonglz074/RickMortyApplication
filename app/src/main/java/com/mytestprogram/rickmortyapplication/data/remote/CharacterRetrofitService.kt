@@ -33,6 +33,9 @@ interface CharacterRetrofitService {
     @GET("character")
     suspend fun filterCharactersByGender(@Query("gender") characterGender: String): AllCharactersDto
 
+    @GET("character")
+    suspend fun filterCharactersBySpecies(@Query("species") characterSpecies: String): AllCharactersDto
+
     @GET("character/{character-id}")
     suspend fun loadMultipleCharactersById(@Path("character-id") characterIds: List<Int>): List<SingleCharacterDto>
 
@@ -46,7 +49,10 @@ interface CharacterRetrofitService {
     suspend fun loadMultipleEpisodesById(@Path("episode-id") episodeIds: List<Int>): List<SingleEpisodeDto>
 
     @GET("episode")
-    suspend fun filterEpisodes(@Query("name") episodeName: String): AllEpisodesDto
+    suspend fun filterEpisodesByName(@Query("name") episodeName: String): AllEpisodesDto
+
+    @GET("episode")
+    suspend fun filterEpisodesBySeason(@Query("episode") episode: List<String>): AllEpisodesDto
 
     @GET("location")
     suspend fun loadAllLocations(): AllLocationsDto

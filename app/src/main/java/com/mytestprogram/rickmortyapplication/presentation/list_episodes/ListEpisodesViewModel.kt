@@ -8,6 +8,7 @@ import com.mytestprogram.rickmortyapplication.domain.models.characters.SingleCha
 import com.mytestprogram.rickmortyapplication.domain.models.episodes.SingleEpisode
 import com.mytestprogram.rickmortyapplication.domain.usecases.episodes.FilterEpisodesUseCase
 import com.mytestprogram.rickmortyapplication.domain.usecases.episodes.LoadAllEpisodesUseCase
+import com.mytestprogram.rickmortyapplication.domain.usecases.episodes.LoadMultipleEpisodesUseCase
 import com.mytestprogram.rickmortyapplication.utils.Resource
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -16,7 +17,8 @@ import javax.inject.Inject
 
 class ListEpisodesViewModel @Inject constructor(
     private val loadAllEpisodesUseCase: LoadAllEpisodesUseCase,
-    private val filterEpisodesUseCase: FilterEpisodesUseCase
+    private val filterEpisodesUseCase: FilterEpisodesUseCase,
+    private val loadMultipleEpisodesUseCase: LoadMultipleEpisodesUseCase
 ): ViewModel() {
 
     private val _episodesList = MutableLiveData<List<SingleEpisode>?>()
@@ -72,6 +74,19 @@ class ListEpisodesViewModel @Inject constructor(
                         _isError.postValue(false)
                     }
 
+                }
+            }
+        }
+    }
+    fun loadMultipleEpisodes(id: List<Int>) {
+        viewModelScope.launch {
+            loadMultipleEpisodesUseCase.loadMultipleEpisodes(id).collectLatest { result ->
+                when(result) {
+                    is Resource.Success -> {
+                        _filterEpisodes.postValue(result.data ?: emptyList())
+                        _isDataLoading.postValue(false)
+                        _isError.postValue(false)
+                    }
                 }
             }
         }

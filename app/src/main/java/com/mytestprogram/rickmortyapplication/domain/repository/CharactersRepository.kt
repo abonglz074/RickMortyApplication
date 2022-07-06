@@ -21,6 +21,8 @@ interface CharactersRepository {
 
     fun filterCharacterByGender(gender: String): Flow<Resource<List<SingleCharacter>>>
 
+    fun filterCharacterBySpecies(species: String): Flow<Resource<List<SingleCharacter>>>
+
     fun loadMultipleCharacters(characterIds: List<Int>): Flow<Resource<List<SingleCharacter>>>
 
     fun loadAllEpisodes(): Flow<Resource<List<SingleEpisode>>>

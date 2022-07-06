@@ -13,4 +13,5 @@ class FilterEpisodesUseCase @Inject constructor(
     fun filterEpisodesByName(episodeName: String): Flow<Resource<List<SingleEpisode>>> {
         return charactersRepository.filterEpisodeByName(episodeName)
     }
+
 }

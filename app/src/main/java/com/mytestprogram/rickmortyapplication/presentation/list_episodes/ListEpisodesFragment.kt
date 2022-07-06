@@ -11,9 +11,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mytestprogram.rickmortyapplication.App
 import com.mytestprogram.rickmortyapplication.MainActivity
 import com.mytestprogram.rickmortyapplication.R
+import com.mytestprogram.rickmortyapplication.databinding.FilterCharactersBinding
+import com.mytestprogram.rickmortyapplication.databinding.FilterEpisodesBinding
 import com.mytestprogram.rickmortyapplication.databinding.FragmentListEpisodesBinding
 import com.mytestprogram.rickmortyapplication.utils.navigator
 import javax.inject.Inject
@@ -91,7 +94,73 @@ class ListEpisodesFragment : Fragment() {
                     return true
                 }
             })
+
+            binding.toolbar.setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.filter_button -> {
+                        showFilterDialog(inflater)
+                        true
+                    }
+                    else -> {
+                        false
+                    }
+                }
+            }
         }
         return binding.root
+    }
+
+    private fun showFilterDialog(inflater: LayoutInflater) {
+        val binding = FilterEpisodesBinding.inflate(inflater)
+        val dialog = BottomSheetDialog(requireContext())
+        dialog.setContentView(binding.root)
+        binding.season1.setOnClickListener {
+            val idSeason1 = listOf(1,2,3,4,5,6,7,8,9,10,11)
+            viewModel.loadMultipleEpisodes(idSeason1)
+            dialog.dismiss()
+            viewModel.filterEpisodes.observe(viewLifecycleOwner) {
+                adapter.episodes = viewModel.filterEpisodes.value ?: emptyList()
+            }
+        }
+        binding.season2.setOnClickListener {
+            val idSeason2 = listOf(12,13,14,15,16,17,18,19,20,21)
+            viewModel.loadMultipleEpisodes(idSeason2)
+            dialog.dismiss()
+            viewModel.filterEpisodes.observe(viewLifecycleOwner) {
+                adapter.episodes = viewModel.filterEpisodes.value ?: emptyList()
+            }
+        }
+        binding.season3.setOnClickListener {
+            val idSeason3 = listOf(22,23,24,25,26,27,28,29,30,31)
+            viewModel.loadMultipleEpisodes(idSeason3)
+            dialog.dismiss()
+            viewModel.filterEpisodes.observe(viewLifecycleOwner) {
+                adapter.episodes = viewModel.filterEpisodes.value ?: emptyList()
+            }
+        }
+        binding.season4.setOnClickListener {
+            val idSeason4 = listOf(32,33,34,35,36,37,38,39,40,41)
+            viewModel.loadMultipleEpisodes(idSeason4)
+            dialog.dismiss()
+            viewModel.filterEpisodes.observe(viewLifecycleOwner) {
+                adapter.episodes = viewModel.filterEpisodes.value ?: emptyList()
+            }
+        }
+        binding.season5.setOnClickListener {
+            val idSeason5 = listOf(42,43,44,45,46,47,48,49,50,51)
+            viewModel.loadMultipleEpisodes(idSeason5)
+            dialog.dismiss()
+            viewModel.filterEpisodes.observe(viewLifecycleOwner) {
+                adapter.episodes = viewModel.filterEpisodes.value ?: emptyList()
+            }
+        }
+        binding.allEpisodes.setOnClickListener {
+            viewModel.loadAllEpisodes()
+            dialog.dismiss()
+            viewModel.episodesList.observe(viewLifecycleOwner) {
+                adapter.episodes = viewModel.episodesList.value ?: emptyList()
+            }
+        }
+        dialog.show()
     }
 }

@@ -80,8 +80,9 @@ class CharactersRepositoryImpl @Inject constructor(
                 singleCharacterDao.getCharacterByName(characterName).map { it.toSingleCharacter() }
             emit(Resource.Loading(dataFromDb))
             try {
-                val remoteCharacters = characterRetrofitService.filterCharacterByName(characterName).results
-                    .map { it.toSingleCharacterEntity() }
+                val remoteCharacters =
+                    characterRetrofitService.filterCharacterByName(characterName).results
+                        .map { it.toSingleCharacterEntity() }
                 singleCharacterDao.insertAllCharacters(remoteCharacters)
             } catch (e: HttpException) {
                 emit(
@@ -111,8 +112,9 @@ class CharactersRepositoryImpl @Inject constructor(
                 singleCharacterDao.getCharacterByStatus(status).map { it.toSingleCharacter() }
             emit(Resource.Loading(dataFromDb))
             try {
-                val remoteCharacters = characterRetrofitService.filterCharactersByStatus(status).results
-                    .map { it.toSingleCharacterEntity() }
+                val remoteCharacters =
+                    characterRetrofitService.filterCharactersByStatus(status).results
+                        .map { it.toSingleCharacterEntity() }
                 singleCharacterDao.insertAllCharacters(remoteCharacters)
             } catch (e: HttpException) {
                 emit(
@@ -142,8 +144,9 @@ class CharactersRepositoryImpl @Inject constructor(
                 singleCharacterDao.getCharacterByGender(gender).map { it.toSingleCharacter() }
             emit(Resource.Loading(dataFromDb))
             try {
-                val remoteCharacters = characterRetrofitService.filterCharactersByGender(gender).results
-                    .map { it.toSingleCharacterEntity() }
+                val remoteCharacters =
+                    characterRetrofitService.filterCharactersByGender(gender).results
+                        .map { it.toSingleCharacterEntity() }
                 singleCharacterDao.insertAllCharacters(remoteCharacters)
             } catch (e: HttpException) {
                 emit(
@@ -165,6 +168,39 @@ class CharactersRepositoryImpl @Inject constructor(
                 .map { it.toSingleCharacter() }
             emit(Resource.Success(newData))
         }
+
+    override fun filterCharacterBySpecies(species: String): Flow<Resource<List<SingleCharacter>>> =
+        flow {
+            emit(Resource.Loading())
+            val dataFromDb =
+                singleCharacterDao.getCharacterBySpecies(species).map { it.toSingleCharacter() }
+            emit(Resource.Loading(dataFromDb))
+            try {
+                val remoteCharacters =
+                    characterRetrofitService.filterCharactersBySpecies(species).results
+                        .map { it.toSingleCharacterEntity() }
+                singleCharacterDao.insertAllCharacters(remoteCharacters)
+            } catch (e: HttpException) {
+                emit(
+                    Resource.Error(
+                        message = "Oops, something went wrong!",
+                        data = emptyList()
+                    )
+                )
+            } catch (e: IOException) {
+                emit(
+                    Resource.Error(
+                        message = "Check internet connection!",
+                        data = emptyList()
+                    )
+                )
+            }
+
+            val newData = singleCharacterDao.getCharacterBySpecies(species)
+                .map { it.toSingleCharacter() }
+            emit(Resource.Success(newData))
+        }
+
 
     override fun loadMultipleCharacters(characterIds: List<Int>) = flow {
         emit(Resource.Loading())
@@ -281,7 +317,7 @@ class CharactersRepositoryImpl @Inject constructor(
                 singleCharacterDao.getEpisodeByName(episodeName).map { it.toSingleEpisode() }
             emit(Resource.Loading(dataFromDb))
             try {
-                val remoteCharacters = characterRetrofitService.filterEpisodes(episodeName).results
+                val remoteCharacters = characterRetrofitService.filterEpisodesByName(episodeName).results
                     .map { it.toSingleEpisodeEntity() }
                 singleCharacterDao.insertAllEpisodes(remoteCharacters)
             } catch (e: HttpException) {
@@ -304,6 +340,37 @@ class CharactersRepositoryImpl @Inject constructor(
                 .map { it.toSingleEpisode() }
             emit(Resource.Success(newData))
         }
+
+//    override fun filterEpisodeBySeason(episode: List<String>): Flow<Resource<List<SingleEpisode>>> =
+//        flow {
+//            emit(Resource.Loading())
+//            val dataFromDb =
+//                singleCharacterDao.getEpisodeBySeason(episode).map { it.toSingleEpisode() }
+//            emit(Resource.Loading(dataFromDb))
+//            try {
+//                val remoteCharacters = characterRetrofitService.filterEpisodesBySeason(episode).results
+//                    .map { it.toSingleEpisodeEntity() }
+//                singleCharacterDao.insertAllEpisodes(remoteCharacters)
+//            } catch (e: HttpException) {
+//                emit(
+//                    Resource.Error(
+//                        message = "Oops, something went wrong!",
+//                        data = emptyList()
+//                    )
+//                )
+//            } catch (e: IOException) {
+//                emit(
+//                    Resource.Error(
+//                        message = "Check internet connection!",
+//                        data = emptyList()
+//                    )
+//                )
+//            }
+//
+//            val newData = singleCharacterDao.getEpisodeBySeason(episode)
+//                .map { it.toSingleEpisode() }
+//            emit(Resource.Success(newData))
+//        }
 
     override fun loadAllLocations(): Flow<Resource<List<SingleLocation>>> = flow {
         emit(Resource.Loading())
@@ -359,33 +426,34 @@ class CharactersRepositoryImpl @Inject constructor(
     }
 
     override fun filterLocationByName(locationName: String): Flow<Resource<List<SingleLocation>>> =
-    flow {
-        emit(Resource.Loading())
-        val dataFromDb =
-            singleCharacterDao.getLocationsByName(locationName).map { it.toSingleLocation() }
-        emit(Resource.Loading(dataFromDb))
-        try {
-            val remoteCharacters = characterRetrofitService.filterLocations(locationName).results
-                .map { it.toSingleLocationEntity() }
-            singleCharacterDao.insertAllLocations(remoteCharacters)
-        } catch (e: HttpException) {
-            emit(
-                Resource.Error(
-                    message = "Oops, something went wrong!",
-                    data = emptyList()
+        flow {
+            emit(Resource.Loading())
+            val dataFromDb =
+                singleCharacterDao.getLocationsByName(locationName).map { it.toSingleLocation() }
+            emit(Resource.Loading(dataFromDb))
+            try {
+                val remoteCharacters =
+                    characterRetrofitService.filterLocations(locationName).results
+                        .map { it.toSingleLocationEntity() }
+                singleCharacterDao.insertAllLocations(remoteCharacters)
+            } catch (e: HttpException) {
+                emit(
+                    Resource.Error(
+                        message = "Oops, something went wrong!",
+                        data = emptyList()
+                    )
                 )
-            )
-        } catch (e: IOException) {
-            emit(
-                Resource.Error(
-                    message = "Check internet connection!",
-                    data = emptyList()
+            } catch (e: IOException) {
+                emit(
+                    Resource.Error(
+                        message = "Check internet connection!",
+                        data = emptyList()
+                    )
                 )
-            )
-        }
+            }
 
-        val newData = singleCharacterDao.getLocationsByName(locationName)
-            .map { it.toSingleLocation() }
-        emit(Resource.Success(newData))
-    }
+            val newData = singleCharacterDao.getLocationsByName(locationName)
+                .map { it.toSingleLocation() }
+            emit(Resource.Success(newData))
+        }
 }
