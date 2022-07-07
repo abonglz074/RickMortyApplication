@@ -56,6 +56,8 @@ class CharacterDetailsFragment : Fragment() {
             setNavigationOnClickListener {
                 navigator().showCharactersList()
             }
+            menu.findItem(R.id.search).isVisible = false
+            menu.findItem(R.id.filter_button).isVisible = false
         }
 
         binding.characterDetailsRecyclerviewEpisodes.layoutManager = LinearLayoutManager(context)
@@ -90,15 +92,8 @@ class CharacterDetailsFragment : Fragment() {
             viewModel.loadMultipleEpisodes(episodeIds)
             viewModel.episodesList.observe(viewLifecycleOwner) {
                 adapter.episodes = viewModel.episodesList.value!!
-            }
-
-            viewModel.isDataLoading.observe(viewLifecycleOwner) {
-                binding.characterDetailsProgressBar.isVisible = it
-            }
-
-            viewModel.isError.observe(viewLifecycleOwner) {
-                if (it == true) {
-                    Toast.makeText(context, "Check internet connection", Toast.LENGTH_LONG).show()
+                viewModel.isDataLoading.observe(viewLifecycleOwner) {
+                    binding.characterDetailsProgressBar.isVisible = it
                 }
             }
 

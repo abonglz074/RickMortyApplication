@@ -56,6 +56,13 @@ class LocationDetailsViewModel @Inject constructor(
                 when(result) {
                     is Resource.Success -> {
                         _charactersList.postValue(result.data)
+                        _isDataLoading.value = false
+                    }
+                    is Resource.Loading -> {
+                        _isDataLoading.value = true
+                    }
+                    is Resource.Error -> {
+                        _isDataLoading.value = false
                     }
                 }
             }

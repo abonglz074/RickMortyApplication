@@ -16,7 +16,7 @@ import javax.inject.Inject
 class EpisodeDetailsViewModel @Inject constructor(
     val loadSingleEpisodeByIdUseCase: LoadSingleEpisodeByIdUseCase,
     val loadMultipleCharactersUseCase: LoadMultipleCharactersUseCase
-): ViewModel() {
+) : ViewModel() {
 
     private val _singleEpisode = MutableLiveData<SingleEpisode?>()
     val singleEpisode: LiveData<SingleEpisode?> = _singleEpisode
@@ -50,15 +50,24 @@ class EpisodeDetailsViewModel @Inject constructor(
             }
         }
     }
+
     fun loadMultipleCharacters(characterIds: List<Int>) {
         viewModelScope.launch {
-            loadMultipleCharactersUseCase.loadMultipleCharacters(characterIds).collectLatest { result ->
-                when(result) {
-                    is Resource.Success -> {
-                        _charactersList.postValue(result.data)
+            loadMultipleCharactersUseCase.loadMultipleCharacters(characterIds)
+                .collectLatest { result ->
+                    when (result) {
+                        is Resource.Success -> {
+                            _charactersList.postValue(result.data)
+                            _isDataLoading.value = false
+                        }
+                        is Resource.Loading -> {
+                            _isDataLoading.value = true
+                        }
+                        is Resource.Error -> {
+                            _isDataLoading.value = false
+                        }
                     }
                 }
-            }
         }
     }
 

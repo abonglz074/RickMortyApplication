@@ -242,6 +242,13 @@ class CharactersRepositoryImpl @Inject constructor(
                     data = dataFromDb
                 )
             )
+        } catch (e: IOException) {
+            emit(
+                Resource.Error(
+                    message = "Check internet connection!",
+                    data = dataFromDb
+                )
+            )
         }
 
         val newData = singleCharacterDao.getAllEpisodes().map { it.toSingleEpisode() }

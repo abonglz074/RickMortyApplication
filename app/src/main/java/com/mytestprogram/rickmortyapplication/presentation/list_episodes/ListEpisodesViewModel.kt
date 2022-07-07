@@ -52,7 +52,7 @@ class ListEpisodesViewModel @Inject constructor(
                         _isDataLoading.value = false
                     }
                     is Resource.Error -> {
-                        if (!result.data.isNullOrEmpty()) {
+                        if (result.data.isNullOrEmpty()) {
                             _isError.value = true
                         }
                         _isDataLoading.value = false

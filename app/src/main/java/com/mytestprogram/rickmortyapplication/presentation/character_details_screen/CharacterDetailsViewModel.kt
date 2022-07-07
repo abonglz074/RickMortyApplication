@@ -55,6 +55,15 @@ class CharacterDetailsViewModel @Inject constructor(
                 when(result) {
                     is Resource.Success -> {
                         _episodesList.postValue(result.data ?: emptyList())
+                        _isDataLoading.value = false
+                    }
+                    is Resource.Loading -> {
+                        if (result.data.isNullOrEmpty()) {
+                            _isDataLoading.value = true
+                        }
+                    }
+                    is Resource.Error -> {
+                        _isDataLoading.value = false
                     }
                 }
             }
