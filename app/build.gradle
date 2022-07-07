@@ -61,10 +61,14 @@ dependencies {
     annotationProcessor 'com.google.dagger:dagger-compiler:2.42'
     kapt "com.google.dagger:dagger-compiler:2.42"
 
-    implementation 'androidx.paging:paging-runtime:3.1.1'
-
     implementation 'androidx.lifecycle:lifecycle-viewmodel-compose:2.4.1'
 
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+
+    implementation 'org.mockito:mockito-core:4.0.0'
+    implementation 'org.mockito.kotlin:mockito-kotlin:4.0.0'
+    testImplementation 'org.mockito:mockito-inline:4.0.0'
+
+//    testImplementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.4.3'
 
 }

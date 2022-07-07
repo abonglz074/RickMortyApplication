@@ -58,6 +58,8 @@ class LocationDetailsFragment : Fragment() {
             setNavigationOnClickListener {
                 navigator().showLocationsList()
             }
+            menu.findItem(R.id.search).isVisible = false
+            menu.findItem(R.id.filter_button).isVisible = false
         }
 
         binding.locationDetailsCharactersRecyclerview.layoutManager = GridLayoutManager(context, 2)

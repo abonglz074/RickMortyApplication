@@ -54,6 +54,8 @@ class EpisodeDetailsFragment: Fragment() {
             setNavigationOnClickListener {
                 navigator().showEpisodesList()
             }
+            menu.findItem(R.id.search).isVisible = false
+            menu.findItem(R.id.filter_button).isVisible = false
         }
 
         binding.episodeDetailsRecyclerView.layoutManager = GridLayoutManager(context, 2)

@@ -20,6 +20,7 @@ class MainActivity : AppCompatActivity(), Navigation {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
+        setTheme(R.style.Theme_RickMortyApplication)
         setContentView(binding.root)
 
         binding.bottomNavigation.setOnItemSelectedListener {
