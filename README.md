@@ -14,7 +14,7 @@
 <p><b>-</b> Тестирование </p>
 
 <h2>Схема навигации в приложении</h2>
-![Навигация RickMorty](https://user-images.githubusercontent.com/97414707/177771040-d1eff2e6-7085-4471-9485-4d3aab0263ff.png)
+![image](https://user-images.githubusercontent.com/97414707/177771040-d1eff2e6-7085-4471-9485-4d3aab0263ff.png)
 
 
 
